@@ -23,8 +23,8 @@ APP_ENV=local
 APP_KEY=base64:jU6xg8sp9ia37ypFlTVk1CAFx6MmeXRukO1W987uUzI=
 APP_DEBUG=true
 APP_TIMEZONE='Asia/Jakarta'
-APP_URL="https://${PROJECT_NAME}.test"
-ASSET_URL="https://${PROJECT_NAME}.test"
+APP_URL=https://localhost
+ASSET_URL=https://localhost
 DEBUGBAR_ENABLED=false
 ASSET_PREFIX=
 # ASSET_PREFIX=/dev/kit/public example in case deployed inside a folder
@@ -57,6 +57,9 @@ SESSION_LIFETIME=120
 SESSION_ENCRYPT=true
 SESSION_PATH=/
 SESSION_DOMAIN=null
+SESSION_SECURE_COOKIE=true
+SESSION_SAME_SITE=lax
+
 
 BROADCAST_CONNECTION=log
 FILESYSTEM_DISK=local
@@ -80,6 +83,21 @@ MAIL_USERNAME=null
 MAIL_PASSWORD=null
 MAIL_FROM_ADDRESS="hello@example.com"
 MAIL_FROM_NAME="${APP_NAME}"
+
+# Google OAuth
+GOOGLE_CLIENT_ID=771039862248-a7ft4l8j2mdng7ivc2srgcmimntet204.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=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
+GOOGLE_REDIRECT_URI=https://localhost/auth/google/callback
+
+# Midtrans
+MIDTRANS_SERVER_KEY=Mid-server-TXGaDlPqiQbTWUv1eDPdRW07
+MIDTRANS_CLIENT_KEY=Mid-client-E8esgSJTTE67bWVM
+MIDTRANS_IS_PRODUCTION=false
+MIDTRANS_IS_SANITIZED=true
+MIDTRANS_IS_3DS=true
+
+# Google Maps
+GOOGLE_MAPS_API_KEY=AIzaSyA2yo898ekSY7OSLDt8gkpR9JER-BJQoU0
 
 AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
@@ -99,8 +117,8 @@ APP_ENV=local
 APP_KEY=base64:jU6xg8sp9ia37ypFlTVk1CAFx6MmeXRukO1W987uUzI=
 APP_DEBUG=true
 APP_TIMEZONE='Asia/Jakarta'
-APP_URL="https://${PROJECT_NAME}.test"
-ASSET_URL="https://${PROJECT_NAME}.test"
+APP_URL=https://localhost
+ASSET_URL=https://localhost
 DEBUGBAR_ENABLED=false
 ASSET_PREFIX=
 # ASSET_PREFIX=/dev/kit/public example in case deployed inside a folder
@@ -133,6 +151,9 @@ SESSION_LIFETIME=120
 SESSION_ENCRYPT=true
 SESSION_PATH=/
 SESSION_DOMAIN=null
+SESSION_SECURE_COOKIE=true
+SESSION_SAME_SITE=lax
+
 
 BROADCAST_CONNECTION=log
 FILESYSTEM_DISK=local
@@ -157,6 +178,21 @@ MAIL_PASSWORD=null
 MAIL_FROM_ADDRESS="hello@example.com"
 MAIL_FROM_NAME="${APP_NAME}"
 
+# Google OAuth
+GOOGLE_CLIENT_ID=771039862248-a7ft4l8j2mdng7ivc2srgcmimntet204.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=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
+GOOGLE_REDIRECT_URI=https://localhost/auth/google/callback
+
+# Midtrans
+MIDTRANS_SERVER_KEY=Mid-server-TXGaDlPqiQbTWUv1eDPdRW07
+MIDTRANS_CLIENT_KEY=Mid-client-E8esgSJTTE67bWVM
+MIDTRANS_IS_PRODUCTION=false
+MIDTRANS_IS_SANITIZED=true
+MIDTRANS_IS_3DS=true
+
+# Google Maps
+GOOGLE_MAPS_API_KEY=AIzaSyA2yo898ekSY7OSLDt8gkpR9JER-BJQoU0
+
 AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
 AWS_DEFAULT_REGION=us-east-1
@@ -166,6 +202,19 @@ AWS_USE_PATH_STYLE_ENDPOINT=false
 VITE_APP_NAME="${APP_NAME}"
 EOF
 fi
+
+# Force inject API keys ke .env
+echo "" >> /var/www/html/.env
+grep -q "GOOGLE_CLIENT_ID" /var/www/html/.env || echo "GOOGLE_CLIENT_ID=771039862248-a7ft4l8j2mdng7ivc2srgcmimntet204.apps.googleusercontent.com" >> /var/www/html/.env
+grep -q "GOOGLE_CLIENT_SECRET" /var/www/html/.env || echo "GOOGLE_CLIENT_SECRET=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" >> /var/www/html/.env
+grep -q "GOOGLE_REDIRECT_URI" /var/www/html/.env || echo "GOOGLE_REDIRECT_URI=https://localhost/auth/google/callback" >> /var/www/html/.env
+grep -q "MIDTRANS_SERVER_KEY" /var/www/html/.env || echo "MIDTRANS_SERVER_KEY=Mid-server-TXGaDlPqiQbTWUv1eDPdRW07" >> /var/www/html/.env
+grep -q "MIDTRANS_CLIENT_KEY" /var/www/html/.env || echo "MIDTRANS_CLIENT_KEY=Mid-client-E8esgSJTTE67bWVM" >> /var/www/html/.env
+grep -q "MIDTRANS_IS_PRODUCTION" /var/www/html/.env || echo "MIDTRANS_IS_PRODUCTION=false" >> /var/www/html/.env
+grep -q "MIDTRANS_IS_SANITIZED" /var/www/html/.env || echo "MIDTRANS_IS_SANITIZED=true" >> /var/www/html/.env
+grep -q "MIDTRANS_IS_3DS" /var/www/html/.env || echo "MIDTRANS_IS_3DS=true" >> /var/www/html/.env
+grep -q "GOOGLE_MAPS_API_KEY" /var/www/html/.env || echo "GOOGLE_MAPS_API_KEY=AIzaSyA2yo898ekSY7OSLDt8gkpR9JER-BJQoU0" >> /var/www/html/.env
+
 
 # Step 3: Wait for DB connection (host should match DB_HOST in .env)
 DB_HOST=$(grep DB_HOST /var/www/html/.env | cut -d '=' -f2)
@@ -210,11 +259,16 @@ chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Step 7: Run database migrations
 echo "🗃️ Running migrations..."
-php artisan migrate --force
+php artisan migrate --force || true
+
+# Jalankan seeder
+echo "🌱 Running seeders..."
+php artisan db:seed --force --class=RolePermissionSeeder || true
+php artisan db:seed --force --class=UserSeeder || true
 
 # Step 8: Run custom project init command
-echo "🚀 Running project:init..."
-php artisan project:init || true
+echo "🚀 Running migrations..."
+php artisan migrate --force || true
 
 # Step 9: Create storage symbolic link
 echo "🔗 Creating storage link..."

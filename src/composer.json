@@ -10,15 +10,22 @@
         "awcodes/light-switch": "*",
         "awcodes/overlook": "*",
         "aymanalhattami/filament-slim-scrollbar": "*",
+        "barryvdh/laravel-dompdf": "^3.1",
         "bezhansalleh/filament-shield": "*",
         "diogogpinto/filament-auth-ui-enhancer": "*",
         "filament/filament": "^3.3",
+        "filament/spatie-laravel-media-library-plugin": "^3.3",
         "hasnayeen/themes": "*",
         "joaopaulolndev/filament-edit-profile": "^1.0",
         "joshembling/image-optimizer": "^1.6",
         "laravel/framework": "^12.0",
+        "laravel/socialite": "^5.27",
         "laravel/tinker": "^2.10.1",
+        "maatwebsite/excel": "^3.1",
+        "midtrans/midtrans-php": "^2.6",
         "njxqlus/filament-progressbar": "*",
+        "spatie/laravel-medialibrary": "^11.23",
+        "spatie/laravel-permission": "^6.25",
         "z3d0x/filament-logger": "^0.8.0"
     },
     "require-dev": {
@@ -31,7 +38,7 @@
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
         "pestphp/pest": "^3.8",
-        "pestphp/pest-plugin-laravel": "^3.1",
+        "pestphp/pest-plugin-laravel": "^3.2",
         "symfony/filesystem": "^7.2"
     },
     "autoload": {

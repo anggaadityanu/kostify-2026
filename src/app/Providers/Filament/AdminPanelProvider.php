@@ -21,6 +21,9 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
+use App\Filament\Admin\Widgets\StatsOverview;
+use App\Filament\Admin\Widgets\LatestBookings;
+use App\Filament\Admin\Widgets\OverduePayments;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -30,9 +33,20 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->spa()
             ->login()
             ->passwordReset()
+            ->userMenuItems([
+                'logout' => MenuItem::make()
+                    ->label('Logout')
+                    ->url(function () {
+                        \Illuminate\Support\Facades\Auth::logout();
+                        request()->session()->invalidate();
+                        request()->session()->regenerateToken();
+                        return '/login';
+                    }),
+            ])
             ->profile(\App\Filament\Pages\Auth\EditProfile::class, isSimple: false)
             ->defaultThemeMode(ThemeMode::Light)
             ->font('Montserrat')
@@ -50,6 +64,9 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\\Filament\\Admin\\Widgets')
             ->widgets([
                 \Awcodes\Overlook\Widgets\OverlookWidget::class,
+                StatsOverview::class,
+                LatestBookings::class,
+                OverduePayments::class,
             ])
             ->navigationGroups([
                 NavigationGroup::make()
