@@ -44,8 +44,18 @@ class Booking extends Model
         });
 
         /**
-         * Ketika booking di-approve → ubah status kamar jadi occupied
-         * Ketika booking di-cancel → ubah status kamar jadi available
+         * Begitu booking dibuat (status pending) → kamar langsung
+         * ditandai 'booked' supaya tidak muncul lagi di daftar kamar
+         * dan tidak bisa dibooking orang lain.
+         */
+        static::created(function ($booking) {
+            $booking->room->update(['status' => 'booked']);
+        });
+
+        /**
+         * Ketika booking di-approve → kamar tetap 'booked' (menunggu bayar)
+         * Ketika booking lunas & jadi 'active' → ubah status kamar jadi occupied
+         * Ketika booking di-cancel/selesai → ubah status kamar jadi available lagi
          */
         static::updated(function ($booking) {
             if ($booking->isDirty('status')) {

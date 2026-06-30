@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Complaint extends Model
 {
@@ -56,5 +57,13 @@ class Complaint extends Model
     public function room(): BelongsTo
     {
         return $this->belongsTo(Room::class);
+    }
+
+    /**
+     * Riwayat chat/percakapan di komplain ini
+     */
+    public function messages(): HasMany
+    {
+        return $this->hasMany(ComplaintMessage::class)->orderBy('created_at');
     }
 }

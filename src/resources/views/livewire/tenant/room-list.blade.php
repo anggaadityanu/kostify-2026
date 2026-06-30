@@ -84,7 +84,8 @@
                             <div class="property-item rounded overflow-hidden">
                                 <div class="position-relative overflow-hidden">
                                     <a href="{{ route('rooms.show', $room->id) }}">
-                                        <img class="img-fluid" src="{{ asset('makaan/img/property-1.jpg') }}" alt="">
+                                        <img class="img-fluid" style="height: 220px; width: 100%; object-fit: cover;"
+                                            src="{{ $room->coverPhotoUrl() }}" alt="{{ $room->property->name }}">
                                     </a>
                                     <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">
                                         Disewa

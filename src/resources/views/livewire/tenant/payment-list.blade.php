@@ -1,14 +1,20 @@
 <div>
     {{-- Header --}}
     <div class="mb-4">
-        <h2 class="fw-bold mb-1">Tagihan Saya 💳</h2>
+        <h2 class="fw-bold mb-1">Tagihan Saya</h2>
         <p class="text-muted mb-0">Riwayat dan tagihan pembayaran</p>
     </div>
 
     {{-- Flash Message --}}
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show mb-4">
-            ✅ {{ session('success') }}
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show mb-4">
+            {{ session('error') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     @endif
@@ -50,18 +56,20 @@
                         <div class="d-flex align-items-center gap-2 mb-2">
                             <span class="badge bg-secondary">{{ $payment->invoice_number }}</span>
                             <span class="badge {{ match($payment->status) {
-                                'unpaid'  => 'bg-danger',
-                                'pending' => 'bg-warning text-dark',
-                                'paid'    => 'bg-success',
-                                'overdue' => 'bg-danger',
-                                default   => 'bg-secondary',
+                                'unpaid'    => 'bg-danger',
+                                'pending'   => 'bg-warning text-dark',
+                                'paid'      => 'bg-success',
+                                'overdue'   => 'bg-danger',
+                                'cancelled' => 'bg-secondary',
+                                default     => 'bg-secondary',
                             } }}">
                                 {{ match($payment->status) {
-                                    'unpaid'  => '🔴 Belum Bayar',
-                                    'pending' => '🟡 Menunggu Konfirmasi',
-                                    'paid'    => '🟢 Lunas',
-                                    'overdue' => '⚠️ Menunggak',
-                                    default   => $payment->status,
+                                    'unpaid'    => 'Belum Bayar',
+                                    'pending'   => 'Menunggu Konfirmasi',
+                                    'paid'      => 'Lunas',
+                                    'overdue'   => 'Menunggak',
+                                    'cancelled' => 'Dibatalkan',
+                                    default     => $payment->status,
                                 } }}
                             </span>
                         </div>
@@ -107,9 +115,13 @@
                                 class="btn btn-outline-success w-100">
                                 <i class="fa fa-download me-1"></i>Invoice
                             </a>
-                        @else
+                        @elseif($payment->status === 'pending')
                             <span class="badge bg-warning text-dark w-100 py-2">
                                 Menunggu
+                            </span>
+                        @elseif($payment->status === 'cancelled')
+                            <span class="badge bg-secondary w-100 py-2">
+                                Dibatalkan
                             </span>
                         @endif
                     </div>
@@ -118,7 +130,7 @@
         </div>
     @empty
         <div class="text-center py-5">
-            <div class="mb-3" style="font-size: 4rem;">📭</div>
+            <i class="fa fa-inbox fa-3x text-muted mb-3"></i>
             <h5 class="text-muted">Belum ada tagihan</h5>
             <p class="text-muted">Tagihan akan muncul setelah booking disetujui</p>
         </div>
@@ -127,23 +139,23 @@
 
 {{-- Script Midtrans Snap --}}
 <script src="https://app.sandbox.midtrans.com/snap/snap.js"
-    data-client-key="{{ config('services.midtrans.client_key') }}"></script>
+    data-client-key="{{ config('midtrans.client_key') }}"></script>
 
 <script>
     document.addEventListener('livewire:init', () => {
         Livewire.on('open-midtrans-snap', (data) => {
             window.snap.pay(data.token, {
                 onSuccess: function() {
-                    window.location.reload();
+                    Livewire.dispatch('midtrans-finished', { paymentId: data.paymentId });
                 },
                 onPending: function() {
-                    window.location.reload();
+                    Livewire.dispatch('midtrans-finished', { paymentId: data.paymentId });
                 },
                 onError: function() {
                     alert('Pembayaran gagal, silakan coba lagi.');
                 },
                 onClose: function() {
-                    console.log('Popup ditutup tanpa menyelesaikan pembayaran');
+                    console.log('Popup ditutup tanpa menyelesaikan pembayaran, tagihan tetap bisa dicoba lagi');
                 }
             });
         });

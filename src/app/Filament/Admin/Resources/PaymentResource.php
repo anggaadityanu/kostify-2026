@@ -205,15 +205,25 @@ class PaymentResource extends Resource
                     ->label('Konfirmasi Lunas')
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
-                    ->visible(fn (Payment $record) => $record->status === 'pending')
+                    ->visible(fn (Payment $record) => in_array($record->status, ['pending', 'unpaid', 'overdue']))
                     ->requiresConfirmation()
+                    ->modalDescription('Pastikan uang sudah benar-benar masuk ke rekening/akun sebelum konfirmasi.')
                     ->action(function (Payment $record) {
                         $record->update([
                             'status'    => 'paid',
                             'paid_date' => now(),
                         ]);
+
+                        // Aktifkan booking & tandai kamar occupied
+                        // (menyamakan logic dengan MidtransService::markAsPaid)
+                        $booking = $record->booking;
+                        if ($booking && $booking->status === 'approved') {
+                            $booking->update(['status' => 'active']);
+                            $booking->room->update(['status' => 'occupied']);
+                        }
+
                         Notification::make()
-                            ->title('Pembayaran dikonfirmasi!')
+                            ->title('Pembayaran dikonfirmasi & booking diaktifkan!')
                             ->success()
                             ->send();
                     }),

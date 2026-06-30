@@ -24,13 +24,13 @@ class WelcomeNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Selamat Datang di Kostify! 🏠')
+            ->subject('Selamat Datang di Kostify!')
             ->greeting("Halo, {$notifiable->name}!")
             ->line('Akun Anda berhasil dibuat di Kostify.')
             ->line('Sekarang Anda bisa:')
-            ->line('✅ Mencari dan booking kamar kos')
-            ->line('✅ Cek tagihan pembayaran')
-            ->line('✅ Submit keluhan & komplain')
+            ->line('Mencari dan booking kamar kos')
+            ->line('Cek tagihan pembayaran')
+            ->line('Submit keluhan & komplain')
             ->action('Mulai Sekarang', url('/dashboard'))
             ->line('Terima kasih telah bergabung dengan Kostify!');
     }

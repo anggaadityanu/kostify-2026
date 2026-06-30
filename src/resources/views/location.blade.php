@@ -18,7 +18,6 @@
             </p>
         </div>
 
-       
         @if($properties->count() > 0)
             <div class="row g-4 mb-5">
                 @foreach($properties as $property)
@@ -60,7 +59,15 @@
             </div>
         @endif
 
-       
+        {{-- Pemisah antara list properti dan peta --}}
+        <div class="d-flex align-items-center gap-3 my-5">
+            <hr class="flex-grow-1">
+            <span class="text-muted fw-semibold px-2">
+                <i class="fa fa-map me-1"></i>Peta Lokasi
+            </span>
+            <hr class="flex-grow-1">
+        </div>
+
         <div id="map-section" class="rounded overflow-hidden" style="height: 450px;">
             <iframe id="map-frame"
                 src="https://www.google.com/maps/embed/v1/place?key={{ config('services.google_maps.key') }}&q={{ $firstProperty?->latitude }},{{ $firstProperty?->longitude }}"

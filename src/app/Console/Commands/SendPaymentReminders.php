@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Booking;
 use App\Models\Payment;
 use App\Models\Contract;
 use App\Notifications\PaymentReminderNotification;
@@ -13,19 +14,11 @@ class SendPaymentReminders extends Command
     protected $signature   = 'kostify:send-reminders';
     protected $description = 'Kirim reminder tagihan dan notifikasi kontrak hampir habis';
 
-    /**
-     * Jalankan semua reminder
-     * Logika:
-     * 1. Cari payment yang jatuh tempo H-7, H-3, H-1
-     * 2. Kirim email reminder ke tenant
-     * 3. Cari kontrak yang hampir habis (H-30)
-     * 4. Kirim notifikasi ke tenant
-     * 5. Update payment overdue
-     */
     public function handle(): void
     {
         $this->sendPaymentReminders();
         $this->markOverduePayments();
+        $this->cancelExpiredBookings();
         $this->sendContractReminders();
 
         $this->info('✅ Semua reminder berhasil dikirim!');
@@ -70,6 +63,35 @@ class SendPaymentReminders extends Command
                 'total_amount' => $payment->amount + $fine,
             ]);
             $this->info("⚠️ Payment {$payment->invoice_number} ditandai overdue");
+        }
+    }
+
+    /**
+     * Auto-cancel booking yang sudah di-approve tapi tagihan
+     * pertamanya tidak dibayar sampai lewat jatuh tempo (2 hari).
+     * Logika: cari booking status 'approved' yang punya tagihan
+     * unpaid/overdue dengan due_date sudah lewat → batalkan booking
+     * (kamar otomatis balik ke 'available' lewat hook di model Booking)
+     * dan tandai tagihan terkait jadi 'cancelled'.
+     */
+    protected function cancelExpiredBookings(): void
+    {
+        $expiredBookings = Booking::where('status', 'approved')
+            ->whereHas('payments', function ($q) {
+                $q->whereIn('status', ['unpaid', 'overdue'])
+                  ->whereDate('due_date', '<', now()->toDateString());
+            })
+            ->with('payments', 'tenant.user', 'room')
+            ->get();
+
+        foreach ($expiredBookings as $booking) {
+            $booking->update(['status' => 'cancelled']);
+
+            $booking->payments()
+                ->whereIn('status', ['unpaid', 'overdue'])
+                ->update(['status' => 'cancelled']);
+
+            $this->info("🚫 Booking {$booking->booking_code} otomatis dibatalkan (telat bayar > 2 hari)");
         }
     }
 

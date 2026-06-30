@@ -4,11 +4,7 @@ use App\Http\Controllers\Api\MidtransController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PropertyController;
 
-/*
-|------------------------------------------
-| Midtrans Routes
-|------------------------------------------
-*/
+
 
 // Endpoint untuk frontend request snap token
 Route::middleware('auth')->group(function () {

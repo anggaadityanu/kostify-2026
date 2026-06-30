@@ -24,9 +24,6 @@ class ComplaintResource extends Resource
     protected static ?string $navigationGroup = 'Manajemen Tenant';
     protected static ?int $navigationSort = 3;
 
-    /**
-     * Form Create & Edit complaint
-     */
     public static function form(Form $form): Form
     {
         return $form->schema([
@@ -80,12 +77,12 @@ class ComplaintResource extends Resource
                     Forms\Components\Select::make('category')
                         ->label('Kategori')
                         ->options([
-                            'electrical'  => '⚡ Listrik',
-                            'plumbing'    => '💧 Air/Pipa',
-                            'furniture'   => '🪑 Furnitur',
-                            'cleanliness' => '🧹 Kebersihan',
-                            'security'    => '🔒 Keamanan',
-                            'other'       => '📝 Lainnya',
+                            'electrical'  => 'Listrik',
+                            'plumbing'    => 'Air/Pipa',
+                            'furniture'   => 'Furnitur',
+                            'cleanliness' => 'Kebersihan',
+                            'security'    => 'Keamanan',
+                            'other'       => 'Lainnya',
                         ])
                         ->required(),
                 ])->columns(2),
@@ -108,9 +105,6 @@ class ComplaintResource extends Resource
         ]);
     }
 
-    /**
-     * Table list complaint
-     */
     public static function table(Table $table): Table
     {
         return $table
@@ -136,12 +130,12 @@ class ComplaintResource extends Resource
                 Tables\Columns\BadgeColumn::make('category')
                     ->label('Kategori')
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'electrical'  => '⚡ Listrik',
-                        'plumbing'    => '💧 Air/Pipa',
-                        'furniture'   => '🪑 Furnitur',
-                        'cleanliness' => '🧹 Kebersihan',
-                        'security'    => '🔒 Keamanan',
-                        'other'       => '📝 Lainnya',
+                        'electrical'  => 'Listrik',
+                        'plumbing'    => 'Air/Pipa',
+                        'furniture'   => 'Furnitur',
+                        'cleanliness' => 'Kebersihan',
+                        'security'    => 'Keamanan',
+                        'other'       => 'Lainnya',
                     }),
 
                 Tables\Columns\BadgeColumn::make('priority')
@@ -196,7 +190,6 @@ class ComplaintResource extends Resource
                     ]),
             ])
             ->actions([
-                // Proses komplain
                 Tables\Actions\Action::make('process')
                     ->label('Proses')
                     ->icon('heroicon-o-wrench')
@@ -210,7 +203,6 @@ class ComplaintResource extends Resource
                             ->send();
                     }),
 
-                // Resolve komplain
                 Tables\Actions\Action::make('resolve')
                     ->label('Selesai')
                     ->icon('heroicon-o-check-circle')
@@ -225,6 +217,12 @@ class ComplaintResource extends Resource
                             ->send();
                     }),
 
+                Tables\Actions\Action::make('chat')
+                    ->label('Chat')
+                    ->icon('heroicon-o-chat-bubble-left-right')
+                    ->color('info')
+                    ->url(fn (Complaint $record) => ComplaintResource::getUrl('chat', ['record' => $record])),
+
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
@@ -236,9 +234,6 @@ class ComplaintResource extends Resource
             ]);
     }
 
-    /**
-     * Scope: Owner hanya lihat complaint dari properti miliknya
-     */
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery();
@@ -264,6 +259,7 @@ class ComplaintResource extends Resource
             'create' => Pages\CreateComplaint::route('/create'),
             'edit'   => Pages\EditComplaint::route('/{record}/edit'),
             'view'   => Pages\ViewComplaint::route('/{record}'),
+            'chat'   => Pages\ChatComplaint::route('/{record}/chat'),
         ];
     }
 }

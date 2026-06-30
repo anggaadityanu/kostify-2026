@@ -15,10 +15,22 @@
 
             {{-- Foto & Info Utama --}}
             <div class="col-lg-8">
-                <div class="rounded overflow-hidden mb-4" style="height: 400px; background: #f0f0f0;">
-                    <img src="{{ asset('makaan/img/property-1.jpg') }}"
+                <div class="rounded overflow-hidden mb-2" style="height: 400px; background: #f0f0f0;">
+                    <img src="{{ $room->coverPhotoUrl() }}"
                         class="w-100 h-100" style="object-fit: cover;" alt="{{ $room->property->name }}">
                 </div>
+
+                @if(!empty($room->photos) && count($room->photos) > 1)
+                    <div class="d-flex gap-2 mb-4 flex-wrap">
+                        @foreach($room->photos as $photo)
+                            <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($photo) }}"
+                                class="rounded" style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
+                                onclick="document.querySelector('.rounded.overflow-hidden.mb-2 img').src = this.src">
+                        @endforeach
+                    </div>
+                @else
+                    <div class="mb-4"></div>
+                @endif
 
                 <div class="d-flex justify-content-between align-items-start mb-3">
                     <div>

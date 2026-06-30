@@ -4,16 +4,17 @@
 
 @section('content')
 
+@php($settings = \App\Models\Setting::current())
+
     <!-- Header/Hero -->
     <div class="container-fluid header bg-white p-0">
         <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
             <div class="col-md-6 p-5 mt-lg-5">
                 <h1 class="display-5 animated fadeIn mb-4">
-                    Temukan <span class="text-primary">Kos & Kontrakan</span> Impian Anda
+                    {{ $settings->home_hero_title }}
                 </h1>
                 <p class="animated fadeIn mb-4 pb-2">
-                    Platform terpercaya untuk mencari, booking, dan mengelola kos & kontrakan
-                    dengan mudah, transparan, dan terjangkau.
+                    {{ $settings->home_hero_subtitle }}
                 </p>
                 <a href="{{ route('rooms.index') }}" class="btn btn-primary py-3 px-5 me-3 animated fadeIn">
                     Cari Kamar Sekarang
@@ -21,14 +22,12 @@
             </div>
             <div class="col-md-6 animated fadeIn">
                 <div class="owl-carousel header-carousel">
-                    <div class="owl-carousel-item">
-                        <img class="img-fluid" src="{{ asset('makaan/img/carousel-1.jpg') }}"
-                            alt="" style="width:100%; height:600px; object-fit:cover;">
-                    </div>
-                    <div class="owl-carousel-item">
-                        <img class="img-fluid" src="{{ asset('makaan/img/carousel-2.jpg') }}"
-                            alt="" style="width:100%; height:600px; object-fit:cover;">
-                    </div>
+                    @foreach($settings->heroCarouselUrls() as $imageUrl)
+                        <div class="owl-carousel-item">
+                            <img class="img-fluid" src="{{ $imageUrl }}"
+                                alt="" style="width:100%; height:600px; object-fit:cover;">
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -180,7 +179,8 @@
                         <div class="property-item rounded overflow-hidden">
                             <div class="position-relative overflow-hidden">
                                 <a href="{{ route('rooms.show', $room->id) }}">
-                                    <img class="img-fluid" src="{{ asset('makaan/img/property-1.jpg') }}" alt="">
+                                    <img class="img-fluid" style="height: 220px; width: 100%; object-fit: cover;"
+                                        src="{{ $room->coverPhotoUrl() }}" alt="{{ $room->property->name }}">
                                 </a>
                                 <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">
                                     Disewa
@@ -234,12 +234,12 @@
                 <div class="bg-white rounded p-4" style="border: 1px dashed rgba(0, 185, 142, .3)">
                     <div class="row g-5 align-items-center">
                         <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
-                            <img class="img-fluid rounded w-100" src="{{ asset('makaan/img/call-to-action.jpg') }}" alt="">
+                            <img class="img-fluid rounded w-100" src="{{ $settings->ctaImageUrl() }}" alt="">
                         </div>
                         <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
                             <div class="mb-4">
-                                <h1 class="mb-3">Siap Temukan Kos Impian?</h1>
-                                <p>Daftar sekarang dan mulai cari kamar yang sesuai kebutuhan Anda dengan mudah.</p>
+                                <h1 class="mb-3">{{ $settings->home_cta_title }}</h1>
+                                <p>{{ $settings->home_cta_description }}</p>
                             </div>
                             @auth
                                 <a href="{{ route('rooms.index') }}" class="btn btn-primary py-3 px-4 me-2">

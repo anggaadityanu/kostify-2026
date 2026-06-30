@@ -39,7 +39,7 @@ class OverduePayments extends BaseWidget
             ])
             ->defaultSort('due_date', 'asc')
             ->paginated(false)
-            ->heading('⚠️ Pembayaran Overdue');
+            ->heading('Pembayaran Overdue');
     }
 
     protected function getQuery(): Builder

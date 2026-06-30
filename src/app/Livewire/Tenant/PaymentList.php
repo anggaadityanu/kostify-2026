@@ -5,6 +5,7 @@ namespace App\Livewire\Tenant;
 use App\Models\Payment;
 use App\Services\MidtransService;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -16,16 +17,12 @@ class PaymentList extends Component
     public bool   $showPayment = false;
     public ?int   $payingId    = null;
 
-    /**
-     * Trigger popup Midtrans
-     * Logika: request snap token → tampilkan popup bayar
-     */
     public function pay(int $paymentId): void
     {
         $payment = Payment::findOrFail($paymentId);
 
-        // Pastikan payment milik tenant yang login
         if ($payment->booking->tenant->user_id !== Auth::id()) {
+            session()->flash('error', 'Tagihan tidak ditemukan.');
             return;
         }
 
@@ -35,11 +32,22 @@ class PaymentList extends Component
             $this->payingId  = $paymentId;
             $this->showPayment = true;
 
-            // Dispatch event ke JS untuk buka popup Midtrans
-            $this->dispatch('open-midtrans-snap', token: $this->snapToken);
+            $this->dispatch('open-midtrans-snap', token: $this->snapToken, paymentId: $paymentId);
         } catch (\Exception $e) {
             session()->flash('error', 'Gagal memproses pembayaran: ' . $e->getMessage());
         }
+    }
+
+    #[On('midtrans-finished')]
+    public function checkStatus(int $paymentId): void
+    {
+        $payment = Payment::find($paymentId);
+
+        if (!$payment || $payment->booking->tenant->user_id !== Auth::id()) {
+            return;
+        }
+
+        app(MidtransService::class)->checkStatus($payment);
     }
 
     public function render()

@@ -22,10 +22,6 @@ class PropertyResource extends Resource
     protected static ?string $navigationGroup = 'Manajemen Properti';
     protected static ?int $navigationSort = 1;
 
-    /**
-     * Form untuk Create & Edit properti
-     * Logika: setiap field mapped ke kolom di tabel properties
-     */
     public static function form(Form $form): Form
     {
         return $form->schema([
@@ -111,21 +107,35 @@ class PropertyResource extends Resource
                         ->numeric(),
                 ])->columns(2),
 
+            Forms\Components\Section::make('Foto Properti')
+                ->schema([
+                    Forms\Components\FileUpload::make('photos')
+                        ->label('Foto Properti')
+                        ->image()
+                        ->multiple()
+                        ->reorderable()
+                        ->maxFiles(5)
+                        ->disk('public')
+                        ->directory('properties')
+                        ->imageEditor()
+                        ->columnSpanFull(),
+                ]),
+
             Forms\Components\Section::make('Fasilitas')
                 ->schema([
                     Forms\Components\CheckboxList::make('facilities')
                         ->label('Fasilitas Tersedia')
                         ->options([
-                            'wifi'      => '📶 WiFi',
-                            'ac'        => '❄️ AC',
-                            'parking'   => '🚗 Parkir',
-                            'security'  => '🔒 Keamanan 24 Jam',
-                            'laundry'   => '👕 Laundry',
-                            'kitchen'   => '🍳 Dapur Bersama',
-                            'tv'        => '📺 TV',
-                            'water'     => '💧 Air Bersih',
-                            'electric'  => '⚡ Listrik',
-                            'bathroom'  => '🚿 Kamar Mandi Dalam',
+                            'wifi'      => 'WiFi',
+                            'ac'        => 'AC',
+                            'parking'   => 'Parkir',
+                            'security'  => 'Keamanan 24 Jam',
+                            'laundry'   => 'Laundry',
+                            'kitchen'   => 'Dapur Bersama',
+                            'tv'        => 'TV',
+                            'water'     => 'Air Bersih',
+                            'electric'  => 'Listrik',
+                            'bathroom'  => 'Kamar Mandi Dalam',
                         ])
                         ->columns(3)
                         ->columnSpanFull(),
@@ -161,7 +171,7 @@ class PropertyResource extends Resource
                                     <a href='{$directionsUrl}'
                                         target='_blank'
                                         class='mt-2 inline-flex items-center text-sm text-blue-600 hover:underline'>
-                                        🗺️ Buka di Google Maps
+                                        Buka di Google Maps
                                     </a>
                                 </div>
                             ");
@@ -172,14 +182,16 @@ class PropertyResource extends Resource
         ]);
     }
 
-    /**
-     * Table untuk list semua properti
-     * Logika: query dari DB → tampilkan kolom penting → filter & search
-     */
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('photos.0')
+                    ->label('Foto')
+                    ->disk('public')
+                    ->square()
+                    ->defaultImageUrl(asset('makaan/img/property-1.jpg')),
+
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nama Properti')
                     ->searchable()
@@ -260,10 +272,6 @@ class PropertyResource extends Resource
             ]);
     }
 
-    /**
-     * Scope query: Owner hanya lihat properti miliknya
-     * Super Admin lihat semua
-     */
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery();

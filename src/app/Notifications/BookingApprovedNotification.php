@@ -26,7 +26,7 @@ class BookingApprovedNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Booking Anda Disetujui! 🎉 - Kostify')
+            ->subject('Booking Anda Disetujui! - Kostify')
             ->greeting("Halo, {$notifiable->name}!")
             ->line('Booking Anda telah disetujui oleh pengelola.')
             ->line('**Detail Booking:**')

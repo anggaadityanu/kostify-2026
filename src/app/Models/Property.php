@@ -25,11 +25,13 @@ class Property extends Model
         'longitude',
         'google_maps_url',
         'facilities',
+        'photos',
         'status',
     ];
 
     protected $casts = [
         'facilities' => 'array',
+        'photos'     => 'array',
         'latitude'   => 'decimal:8',
         'longitude'  => 'decimal:8',
     ];

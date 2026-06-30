@@ -1,8 +1,8 @@
 <div>
     {{-- Header --}}
     <div class="mb-4">
-        <h2 class="fw-bold">Halo, {{ Auth::user()->name }}! 👋</h2>
-        <p class="text-muted">Selamat datang di portal tenant Kostify</p>
+        <h2 class="fw-bold mb-1">Halo, {{ Auth::user()->name }}!</h2>
+        <p class="text-muted mb-0">Selamat datang di portal tenant Kostify</p>
     </div>
 
     {{-- Alert Profil Belum Lengkap --}}
@@ -23,10 +23,10 @@
     {{-- Stats Cards --}}
     <div class="row g-4 mb-4">
         <div class="col-md-4">
-            <div class="bg-light rounded p-4 h-100">
+            <div class="bg-white rounded border shadow-sm p-4 h-100">
                 <p class="text-muted mb-1">Status Sewa</p>
                 @if($activeBooking)
-                    <h4 class="text-primary fw-bold">Aktif ✅</h4>
+                    <h4 class="text-primary fw-bold">Aktif</h4>
                     <small class="text-muted">
                         {{ $activeBooking->room->property->name }} -
                         Kamar {{ $activeBooking->room->room_number }}
@@ -40,7 +40,7 @@
             </div>
         </div>
         <div class="col-md-4">
-            <div class="bg-light rounded p-4 h-100">
+            <div class="bg-white rounded border shadow-sm p-4 h-100">
                 <p class="text-muted mb-1">Tagihan Belum Bayar</p>
                 <h4 class="{{ $unpaidPayments->count() > 0 ? 'text-danger' : 'text-success' }} fw-bold">
                     {{ $unpaidPayments->count() }} tagihan
@@ -53,7 +53,7 @@
             </div>
         </div>
         <div class="col-md-4">
-            <div class="bg-light rounded p-4 h-100">
+            <div class="bg-white rounded border shadow-sm p-4 h-100">
                 <p class="text-muted mb-1">Komplain Aktif</p>
                 <h4 class="{{ $openComplaints->count() > 0 ? 'text-warning' : 'text-success' }} fw-bold">
                     {{ $openComplaints->count() }} komplain
@@ -62,12 +62,44 @@
         </div>
     </div>
 
+    {{-- Booking Menunggu Approve / Bayar --}}
+    @if($pendingBookings->count() > 0)
+        <div class="bg-white rounded border shadow-sm mb-4">
+            <div class="p-3 border-bottom">
+                <h6 class="fw-bold mb-0">Booking Saya</h6>
+            </div>
+            <div class="p-3">
+                @foreach($pendingBookings as $booking)
+                    <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                        <div>
+                            <p class="mb-0 fw-medium">
+                                {{ $booking->room->property->name ?? '-' }} -
+                                Kamar {{ $booking->room->room_number ?? '-' }}
+                            </p>
+                            <small class="text-muted">{{ $booking->booking_code }}</small>
+                        </div>
+                        <div class="text-end">
+                            @if($booking->status === 'pending')
+                                <span class="badge bg-warning text-dark">Menunggu Approve Admin</span>
+                            @elseif($booking->status === 'approved')
+                                <span class="badge bg-info text-dark d-block mb-1">Disetujui</span>
+                                <a href="{{ route('payments.index') }}" class="btn btn-primary btn-sm">
+                                    Bayar Sekarang
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endif
+
     <div class="row g-4">
         {{-- Tagihan Belum Bayar --}}
         <div class="col-md-6">
-            <div class="bg-white rounded border h-100">
+            <div class="bg-white rounded border shadow-sm h-100">
                 <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
-                    <h6 class="fw-bold mb-0">💳 Tagihan Belum Bayar</h6>
+                    <h6 class="fw-bold mb-0">Tagihan Belum Bayar</h6>
                     <a href="{{ route('payments.index') }}" class="text-primary small">Lihat Semua</a>
                 </div>
                 <div class="p-3">
@@ -91,7 +123,7 @@
                             </div>
                         </div>
                     @empty
-                        <p class="text-center text-muted py-3">✅ Semua tagihan sudah lunas!</p>
+                        <p class="text-center text-muted py-3">Semua tagihan sudah lunas!</p>
                     @endforelse
                 </div>
             </div>
@@ -99,9 +131,9 @@
 
         {{-- Riwayat Pembayaran --}}
         <div class="col-md-6">
-            <div class="bg-white rounded border h-100">
+            <div class="bg-white rounded border shadow-sm h-100">
                 <div class="p-3 border-bottom">
-                    <h6 class="fw-bold mb-0">📋 Riwayat Pembayaran</h6>
+                    <h6 class="fw-bold mb-0">Riwayat Pembayaran</h6>
                 </div>
                 <div class="p-3">
                     @forelse($recentPayments as $payment)
@@ -114,7 +146,7 @@
                                 <p class="text-success fw-bold mb-0">
                                     Rp {{ number_format($payment->total_amount, 0, ',', '.') }}
                                 </p>
-                                <small class="text-success">✅ Lunas</small>
+                                <small class="text-success">Lunas</small>
                             </div>
                         </div>
                     @empty

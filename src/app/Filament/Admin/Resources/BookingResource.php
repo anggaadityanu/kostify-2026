@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\BookingResource\Pages;
 use App\Models\Booking;
+use App\Models\Payment;
 use App\Models\Room;
 use App\Models\Tenant;
 use Filament\Forms;
@@ -25,11 +26,6 @@ class BookingResource extends Resource
     protected static ?string $navigationGroup = 'Manajemen Tenant';
     protected static ?int $navigationSort = 2;
 
-    /**
-     * Form Create & Edit booking
-     * Logika: pilih tenant → pilih kamar → 
-     * hitung total otomatis dari harga × durasi
-     */
     public static function form(Form $form): Form
     {
         return $form->schema([
@@ -52,13 +48,19 @@ class BookingResource extends Resource
 
                     Forms\Components\Select::make('room_id')
                         ->label('Kamar')
-                        ->options(fn () => Room::with('property')
-                            ->where('status', 'available')
-                            ->get()
-                            ->mapWithKeys(fn ($room) => [
-                                $room->id => $room->property->name . ' - ' . $room->room_number
-                            ])
-                        )
+                        ->options(function (?Booking $record) {
+                            return Room::with('property')
+                                ->where(function ($q) use ($record) {
+                                    $q->where('status', 'available');
+                                    if ($record?->room_id) {
+                                        $q->orWhere('id', $record->room_id);
+                                    }
+                                })
+                                ->get()
+                                ->mapWithKeys(fn ($room) => [
+                                    $room->id => $room->property->name . ' - ' . $room->room_number
+                                ]);
+                        })
                         ->required()
                         ->live()
                         ->afterStateUpdated(function ($state, $set) {
@@ -121,10 +123,6 @@ class BookingResource extends Resource
         ]);
     }
 
-    /**
-     * Hitung total harga otomatis
-     * Logika: ambil harga kamar × durasi bulan
-     */
     protected static function calculateTotal($checkIn, $duration, $roomId, $set): void
     {
         if ($roomId && $duration) {
@@ -134,9 +132,6 @@ class BookingResource extends Resource
         }
     }
 
-    /**
-     * Table list booking
-     */
     public static function table(Table $table): Table
     {
         return $table
@@ -199,27 +194,41 @@ class BookingResource extends Resource
                     ]),
             ])
             ->actions([
-                // Tombol Approve
                 Tables\Actions\Action::make('approve')
                     ->label('Approve')
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
                     ->visible(fn (Booking $record) => $record->status === 'pending')
+                    ->requiresConfirmation()
+                    ->modalDescription('Setelah disetujui, tagihan pembayaran akan dibuat otomatis dengan jatuh tempo 2 hari dari sekarang.')
                     ->action(function (Booking $record) {
+                        $record->refresh();
+                        if ($record->status !== 'pending') {
+                            return;
+                        }
+
                         $record->update(['status' => 'approved']);
 
-                        // Kirim notifikasi ke tenant
+                        Payment::create([
+                            'booking_id'   => $record->id,
+                            'amount'       => $record->room->price_monthly,
+                            'fine_amount'  => 0,
+                            'total_amount' => $record->room->price_monthly,
+                            'due_date'     => now()->addDays(2),
+                            'status'       => 'unpaid',
+                        ]);
+
                         $record->tenant->user->notify(
                             new BookingApprovedNotification($record)
                         );
 
                         Notification::make()
-                            ->title('Booking disetujui & notifikasi terkirim!')
+                            ->title('Booking disetujui, tagihan dibuat & notifikasi terkirim!')
+                            ->body('Tenant punya waktu 2 hari untuk membayar sebelum booking otomatis dibatalkan.')
                             ->success()
                             ->send();
                     }),
 
-                // Tombol Cancel
                 Tables\Actions\Action::make('cancel')
                     ->label('Batalkan')
                     ->icon('heroicon-o-x-circle')
@@ -228,6 +237,11 @@ class BookingResource extends Resource
                     ->requiresConfirmation()
                     ->action(function (Booking $record) {
                         $record->update(['status' => 'cancelled']);
+
+                        $record->payments()
+                            ->whereIn('status', ['unpaid', 'pending', 'overdue'])
+                            ->update(['status' => 'cancelled']);
+
                         Notification::make()
                             ->title('Booking dibatalkan!')
                             ->warning()
@@ -243,9 +257,6 @@ class BookingResource extends Resource
             ]);
     }
 
-    /**
-     * Scope: Owner hanya lihat booking dari properti miliknya
-     */
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery();

@@ -2,28 +2,26 @@
 @section('title', 'Tentang Kami - Kostify')
 @section('content')
 
+@php($settings = \App\Models\Setting::current())
+
 <div class="container-fluid py-5">
     <div class="container">
         <div class="row g-5 align-items-center">
             <div class="col-lg-6 wow fadeIn">
                 <div class="about-img position-relative overflow-hidden p-5 pe-0">
                     <img class="img-fluid w-100"
-                        src="{{ asset('makaan/img/carousel-1.jpg') }}"
+                        src="{{ $settings->aboutImageUrl() }}"
                         style="border-radius: 8px;">
                 </div>
             </div>
             <div class="col-lg-6 wow fadeIn">
-                <h1 class="mb-4">Tentang Kostify</h1>
+                <h1 class="mb-4">{{ $settings->about_title }}</h1>
                 <p class="mb-4">
-                    Kostify adalah platform digital terpercaya untuk mencari,
-                    booking, dan mengelola kos & kontrakan di Indonesia.
-                    Kami hadir untuk memudahkan proses sewa-menyewa properti
-                    secara transparan dan efisien.
+                    {{ $settings->about_description }}
                 </p>
-                <p><i class="fa fa-check text-primary me-3"></i>Booking kamar mudah & cepat</p>
-                <p><i class="fa fa-check text-primary me-3"></i>Pembayaran online aman via Midtrans</p>
-                <p><i class="fa fa-check text-primary me-3"></i>Laporan & notifikasi otomatis</p>
-                <p><i class="fa fa-check text-primary me-3"></i>Support 24/7 untuk tenant</p>
+                @foreach($settings->about_features ?? [] as $feature)
+                    <p><i class="fa fa-check text-primary me-3"></i>{{ $feature }}</p>
+                @endforeach
                 <a class="btn btn-primary py-3 px-5 mt-3"
                     href="{{ route('rooms.index') }}">
                     Cari Kamar Sekarang
@@ -70,7 +68,7 @@
                 <div class="bg-light rounded p-4 text-center h-100">
                     <i class="fa fa-phone-alt fa-3x text-primary mb-3"></i>
                     <h5>Telepon</h5>
-                    <p class="text-muted mb-0">+62 821-1498-1216</p>
+                    <p class="text-muted mb-0">{{ $settings->phone }}</p>
                     <p class="text-muted">Senin - Minggu, 24/7</p>
                 </div>
             </div>
@@ -78,7 +76,7 @@
                 <div class="bg-light rounded p-4 text-center h-100">
                     <i class="fa fa-envelope fa-3x text-primary mb-3"></i>
                     <h5>Email</h5>
-                    <p class="text-muted mb-0">info@kostify.com</p>
+                    <p class="text-muted mb-0">{{ $settings->email }}</p>
                     <p class="text-muted">Respon dalam 1x24 jam</p>
                 </div>
             </div>
@@ -86,8 +84,9 @@
                 <div class="bg-light rounded p-4 text-center h-100">
                     <i class="fab fa-whatsapp fa-3x text-success mb-3"></i>
                     <h5>WhatsApp</h5>
-                    <p class="text-muted mb-0">+62 821-1498-1216</p>
-                    <a href="https://wa.me/6282114981216" target="_blank" class="btn btn-success btn-sm mt-2">
+                    <p class="text-muted mb-0">{{ $settings->whatsapp }}</p>
+                    <a href="https://wa.me/{{ preg_replace('/\D/', '', $settings->whatsapp ?? '') }}"
+                        target="_blank" class="btn btn-success btn-sm mt-2">
                         Chat Sekarang
                     </a>
                 </div>

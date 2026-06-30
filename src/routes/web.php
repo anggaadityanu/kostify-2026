@@ -63,6 +63,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/complaints', \App\Livewire\Tenant\ComplaintList::class)
         ->name('complaints.index');
 
+    Route::get('/dashboard/complaints/{complaint}', \App\Livewire\Tenant\ComplaintDetail::class)
+        ->name('complaints.show');
+
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])
         ->name('profile.edit');

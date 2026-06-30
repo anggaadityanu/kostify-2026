@@ -44,6 +44,11 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
         $user = Auth::user();
 
+        $request->session()->put(
+            'password_hash_' . Auth::getDefaultDriver(),
+            $user->getAuthPassword()
+        );
+
         if (!$user->is_active) {
             Auth::logout();
             return back()->withErrors([

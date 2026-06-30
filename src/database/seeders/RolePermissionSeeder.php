@@ -16,78 +16,34 @@ class RolePermissionSeeder extends Seeder
             ->forgetCachedPermissions();
 
         // ===========================
-        // BUAT SEMUA PERMISSION
-        // ===========================
-        $permissions = [
-        // Properti
-        'view_property', 'create_property',
-        'edit_property', 'delete_property',
-
-        // Kamar
-        'view_room', 'create_room',
-        'edit_room', 'delete_room',
-
-        // Tenant
-        'view_tenant', 'create_tenant',
-        'edit_tenant', 'delete_tenant',
-
-        // Booking
-        'view_booking', 'create_booking',
-        'edit_booking', 'delete_booking',
-        'approve_booking',
-
-        // Pembayaran
-        'view_payment', 'create_payment',
-        'edit_payment', 'delete_payment',
-        'confirm_payment',
-
-        // Laporan
-        'view_report', 'export_report',
-
-        // Komplain  ← ini yang kurang kemarin!
-        'view_complaint', 'create_complaint',
-        'reply_complaint', 'resolve_complaint',
-        'delete_complaint',
-
-        // Setting
-        'view_setting', 'edit_setting',
-
-        // User Management
-        'view_user', 'create_user',
-        'edit_user', 'delete_user',
-    ];
-
-        foreach ($permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission]);
-        }
-
-        // ===========================
         // BUAT ROLE
         // ===========================
 
-        // Super Admin → semua permission
+        // Super Admin -> semua permission yang ke-generate Filament Shield
         $superAdmin = Role::firstOrCreate(['name' => 'super_admin']);
         $superAdmin->givePermissionTo(Permission::all());
 
-        // Owner → permission terbatas (properti miliknya)
+        // Owner -> permission terbatas, nama HARUS sama persis kayak yang
+        // dicek di app/Policies/*.php (format Filament Shield: view_any_x,
+        // view_x, create_x, update_x, delete_x, delete_any_x)
         $owner = Role::firstOrCreate(['name' => 'owner']);
-        $owner->givePermissionTo([
-            'view_property', 'edit_property',
-            'view_room', 'edit_room',
-            'view_tenant',
-            'view_booking', 'approve_booking',
-            'view_payment', 'confirm_payment',
-            'view_report', 'export_report',
-            'view_complaint', 'reply_complaint', 'resolve_complaint',
-        ]);
+        $owner->givePermissionTo(array_filter([
+            'view_any_property', 'view_property', 'update_property',
+            'view_any_room', 'view_room', 'update_room',
+            'view_any_tenant', 'view_tenant',
+            'view_any_booking', 'view_booking', 'update_booking',
+            'view_any_payment', 'view_payment', 'update_payment',
+            'view_any_complaint', 'view_complaint', 'update_complaint',
+        ], fn ($name) => Permission::where('name', $name)->exists()));
 
-        // Tenant → hanya portal tenant
+        // Tenant -> gak akses admin panel sama sekali, tapi tetep
+        // disiapkan permission dasarnya kalau suatu saat dibutuhkan
         $tenant = Role::firstOrCreate(['name' => 'tenant']);
-        $tenant->givePermissionTo([
-            'view_booking', 'create_booking',
-            'view_payment',
-            'view_complaint', 'create_complaint',
-        ]);
+        $tenant->givePermissionTo(array_filter([
+            'view_any_booking', 'view_booking', 'create_booking',
+            'view_any_payment', 'view_payment',
+            'view_any_complaint', 'view_complaint', 'create_complaint',
+        ], fn ($name) => Permission::where('name', $name)->exists()));
 
         // ===========================
         // BUAT USER SUPER ADMIN
@@ -102,8 +58,8 @@ class RolePermissionSeeder extends Seeder
         );
         $adminUser->assignRole('super_admin');
 
-        $this->command->info('✅ Roles & Permissions berhasil dibuat!');
-        $this->command->info('📧 Login: superadmin@kostify.com');
-        $this->command->info('🔑 Password: password123');
+        $this->command->info('Roles & Permissions berhasil dibuat!');
+        $this->command->info('Login: superadmin@kostify.com');
+        $this->command->info('Password: password123');
     }
 }

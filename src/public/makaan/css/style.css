@@ -70,8 +70,8 @@
 /*** Navbar ***/
 .nav-bar {
     position: relative;
-    margin-top: 45px;
-    padding: 0 3rem;
+    margin-top: 0;
+    padding: 0;
     transition: .5s;
     z-index: 9999;
 }

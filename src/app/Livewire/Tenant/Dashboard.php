@@ -19,10 +19,11 @@ class Dashboard extends Component
         $user   = Auth::user();
         $tenant = $user->tenant;
 
-        $activeBooking  = null;
-        $unpaidPayments = collect();
-        $openComplaints = collect();
-        $recentPayments = collect();
+        $activeBooking   = null;
+        $pendingBookings = collect();
+        $unpaidPayments  = collect();
+        $openComplaints  = collect();
+        $recentPayments  = collect();
 
         if ($tenant) {
             // Booking aktif saat ini
@@ -31,6 +32,13 @@ class Dashboard extends Component
                 ->with('room.property')
                 ->latest()
                 ->first();
+
+            // Booking yang masih menunggu approve admin / menunggu bayar
+            $pendingBookings = Booking::where('tenant_id', $tenant->id)
+                ->whereIn('status', ['pending', 'approved'])
+                ->with('room.property')
+                ->latest()
+                ->get();
 
             // Tagihan yang belum dibayar
             $unpaidPayments = Payment::whereHas('booking', fn ($q) =>
@@ -58,11 +66,12 @@ class Dashboard extends Component
         }
 
         return view('livewire.tenant.dashboard', [
-            'tenant'         => $tenant,
-            'activeBooking'  => $activeBooking,
-            'unpaidPayments' => $unpaidPayments,
-            'openComplaints' => $openComplaints,
-            'recentPayments' => $recentPayments,
+            'tenant'          => $tenant,
+            'activeBooking'   => $activeBooking,
+            'pendingBookings' => $pendingBookings,
+            'unpaidPayments'  => $unpaidPayments,
+            'openComplaints'  => $openComplaints,
+            'recentPayments'  => $recentPayments,
         ])->layout('layouts.makaan');
     }
 }

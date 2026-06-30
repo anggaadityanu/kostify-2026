@@ -50,7 +50,7 @@
 
     {{-- Header --}}
     <div class="header">
-        <h1>🏠 Kostify</h1>
+        <h1>Kostify</h1>
         <p>Sistem Manajemen Kos & Kontrakan</p>
     </div>
 
@@ -70,9 +70,9 @@
                 <br>
                 <span class="badge badge-{{ $payment->status }}">
                     {{ match($payment->status) {
-                        'paid'    => '✅ LUNAS',
-                        'unpaid'  => '⏳ BELUM BAYAR',
-                        'overdue' => '⚠️ TERLAMBAT',
+                        'paid'    => 'LUNAS',
+                        'unpaid'  => 'BELUM BAYAR',
+                        'overdue' => 'TERLAMBAT',
                         default   => strtoupper($payment->status),
                     } }}
                 </span>
@@ -167,7 +167,7 @@
             <div style="margin-top: 15px; padding: 10px; background: #D1FAE5;
                         border-radius: 8px; text-align: center;">
                 <p style="color: #065F46; font-weight: bold;">
-                    ✅ Pembayaran telah diterima pada
+                    Pembayaran telah diterima pada
                     {{ $payment->paid_date?->format('d M Y') }}
                 </p>
                 @if($payment->payment_method)

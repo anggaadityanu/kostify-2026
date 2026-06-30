@@ -27,9 +27,9 @@ class PaymentReminderNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         $urgency = match(true) {
-            $this->daysRemaining <= 1 => '🚨 HARI INI',
-            $this->daysRemaining <= 3 => '⚠️ ' . $this->daysRemaining . ' Hari Lagi',
-            default                   => '📅 ' . $this->daysRemaining . ' Hari Lagi',
+            $this->daysRemaining <= 1 => ' HARI INI',
+            $this->daysRemaining <= 3 => $this->daysRemaining . ' Hari Lagi',
+            default                   => $this->daysRemaining . ' Hari Lagi',
         };
 
         return (new MailMessage)

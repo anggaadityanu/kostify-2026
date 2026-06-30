@@ -150,7 +150,9 @@
     @endif
 
     <!-- Content -->
-    {{ $slot ?? '' }}
+    <div class="container pt-4 pb-2">
+        {{ $slot ?? '' }}
+    </div>
     @yield('content')
 
     <!-- Footer -->
@@ -159,9 +161,10 @@
             <div class="row g-5">
                 <div class="col-lg-3 col-md-6">
                     <h5 class="text-white mb-4">Kostify</h5>
-                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>Indonesia</p>
-                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+62 xxx xxxx xxxx</p>
-                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@kostify.com</p>
+                    @php($settings = \App\Models\Setting::current())
+                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>{{ $settings->address }}</p>
+                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>{{ $settings->phone }}</p>
+                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>{{ $settings->email }}</p>
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <h5 class="text-white mb-4">Quick Links</h5>

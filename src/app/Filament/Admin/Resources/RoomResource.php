@@ -22,10 +22,6 @@ class RoomResource extends Resource
     protected static ?string $navigationGroup = 'Manajemen Properti';
     protected static ?int $navigationSort = 2;
 
-    /**
-     * Form Create & Edit kamar
-     * Logika: pilih properti dulu → isi detail kamar
-     */
     public static function form(Form $form): Form
     {
         return $form->schema([
@@ -64,6 +60,7 @@ class RoomResource extends Resource
                         ->label('Status')
                         ->options([
                             'available'   => 'Tersedia',
+                            'booked'      => 'Dibooking',
                             'occupied'    => 'Terisi',
                             'maintenance' => 'Maintenance',
                         ])
@@ -105,21 +102,36 @@ class RoomResource extends Resource
                         ->helperText('Opsional, isi jika ada diskon tahunan'),
                 ])->columns(2),
 
+            Forms\Components\Section::make('Foto Kamar')
+                ->schema([
+                    Forms\Components\FileUpload::make('photos')
+                        ->label('Foto Kamar')
+                        ->image()
+                        ->multiple()
+                        ->reorderable()
+                        ->maxFiles(5)
+                        ->disk('public')
+                        ->directory('rooms')
+                        ->imageEditor()
+                        ->helperText('Kalau kamar belum ada foto, otomatis pakai foto properti.')
+                        ->columnSpanFull(),
+                ]),
+
             Forms\Components\Section::make('Fasilitas Kamar')
                 ->schema([
                     Forms\Components\CheckboxList::make('facilities')
                         ->label('Fasilitas Kamar')
                         ->options([
-                            'ac'            => '❄️ AC',
-                            'wifi'          => '📶 WiFi',
-                            'bathroom'      => '🚿 Kamar Mandi Dalam',
-                            'wardrobe'      => '🪞 Lemari',
-                            'desk'          => '🪑 Meja Belajar',
-                            'bed'           => '🛏️ Kasur',
-                            'tv'            => '📺 TV',
-                            'window'        => '🪟 Jendela',
-                            'balcony'       => '🌿 Balkon',
-                            'water_heater'  => '🔥 Water Heater',
+                            'ac'            => 'AC',
+                            'wifi'          => 'WiFi',
+                            'bathroom'      => 'Kamar Mandi Dalam',
+                            'wardrobe'      => 'Lemari',
+                            'desk'          => 'Meja Belajar',
+                            'bed'           => 'Kasur',
+                            'tv'            => 'TV',
+                            'window'        => 'Jendela',
+                            'balcony'       => 'Balkon',
+                            'water_heater'  => 'Water Heater',
                         ])
                         ->columns(3)
                         ->columnSpanFull(),
@@ -127,14 +139,16 @@ class RoomResource extends Resource
         ]);
     }
 
-    /**
-     * Table list kamar
-     * Logika: tampilkan kamar + properti + status dengan warna
-     */
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('photos.0')
+                    ->label('Foto')
+                    ->disk('public')
+                    ->square()
+                    ->defaultImageUrl(asset('makaan/img/property-1.jpg')),
+
                 Tables\Columns\TextColumn::make('property.name')
                     ->label('Properti')
                     ->searchable()
@@ -167,13 +181,16 @@ class RoomResource extends Resource
                     ->label('Status')
                     ->colors([
                         'success' => 'available',
+                        'info'    => 'booked',
                         'danger'  => 'occupied',
                         'warning' => 'maintenance',
                     ])
                     ->formatStateUsing(fn (string $state): string => match ($state) {
                         'available'   => 'Tersedia',
+                        'booked'      => 'Dibooking',
                         'occupied'    => 'Terisi',
                         'maintenance' => 'Maintenance',
+                        default       => $state,
                     }),
             ])
             ->filters([
@@ -193,6 +210,7 @@ class RoomResource extends Resource
                     ->label('Status')
                     ->options([
                         'available'   => 'Tersedia',
+                        'booked'      => 'Dibooking',
                         'occupied'    => 'Terisi',
                         'maintenance' => 'Maintenance',
                     ]),
@@ -208,9 +226,6 @@ class RoomResource extends Resource
             ]);
     }
 
-    /**
-     * Scope: Owner hanya lihat kamar dari properti miliknya
-     */
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery();

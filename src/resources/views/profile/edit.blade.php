@@ -1,11 +1,11 @@
 <x-tenant-layout>
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <h2 class="mb-4 fw-bold text-dark">Edit Profil 👤</h2>
+            <h2 class="mb-4 fw-bold text-dark">Edit Profil </h2>
 
             @if(session('success'))
                 <div class="alert alert-success alert-dismissible fade show">
-                    ✅ {{ session('success') }}
+                     {{ session('success') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             @endif

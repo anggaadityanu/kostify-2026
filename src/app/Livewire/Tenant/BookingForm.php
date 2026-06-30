@@ -3,7 +3,6 @@
 namespace App\Livewire\Tenant;
 
 use App\Models\Booking;
-use App\Models\Payment;
 use App\Models\Room;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -61,9 +60,9 @@ class BookingForm extends Component
      * Submit booking
      * Logika:
      * 1. Validasi input
-     * 2. Buat booking → status pending
-     * 3. Buat payment → status unpaid
-     * 4. Redirect ke halaman pembayaran
+     * 2. Buat booking → status pending (kamar otomatis jadi 'booked', lihat Booking model)
+     * 3. Tagihan/Payment BELUM dibuat di sini — baru dibuat saat admin approve
+     * 4. Redirect ke dashboard, tenant menunggu approval admin
      */
     public function submit(): void
     {
@@ -78,8 +77,8 @@ class BookingForm extends Component
 
         $tenant = Auth::user()->tenant;
 
-        // Buat booking
-        $booking = Booking::create([
+        // Buat booking (status pending, kamar otomatis ditandai 'booked')
+        Booking::create([
             'room_id'         => $this->room->id,
             'tenant_id'       => $tenant->id,
             'check_in_date'   => $this->checkInDate,
@@ -89,18 +88,8 @@ class BookingForm extends Component
             'notes'           => $this->notes,
         ]);
 
-        // Buat payment pertama
-        Payment::create([
-            'booking_id'   => $booking->id,
-            'amount'       => $this->room->price_monthly,
-            'fine_amount'  => 0,
-            'total_amount' => $this->room->price_monthly,
-            'due_date'     => now()->addDays(3), // jatuh tempo 3 hari
-            'status'       => 'unpaid',
-        ]);
-
-        session()->flash('success', 'Booking berhasil! Silakan lakukan pembayaran.');
-        $this->redirect(route('payments.index'));
+        session()->flash('success', 'Booking berhasil dibuat! Mohon tunggu, admin akan memverifikasi booking kamu. Tagihan akan muncul setelah disetujui.');
+        $this->redirect(route('dashboard'));
     }
 
     public function render()

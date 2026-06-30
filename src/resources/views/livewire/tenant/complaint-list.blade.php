@@ -14,7 +14,7 @@
     {{-- Flash --}}
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show mb-4">
-            ✅ {{ session('success') }}
+            {{ session('success') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     @endif
@@ -49,12 +49,12 @@
                             <select wire:model="category"
                                 class="form-select @error('category') is-invalid @enderror">
                                 <option value="">Pilih kategori...</option>
-                                <option value="electrical">⚡ Listrik</option>
-                                <option value="plumbing">💧 Air/Pipa</option>
-                                <option value="furniture">🪑 Furnitur</option>
-                                <option value="cleanliness">🧹 Kebersihan</option>
-                                <option value="security">🔒 Keamanan</option>
-                                <option value="other">📝 Lainnya</option>
+                                <option value="electrical">Listrik</option>
+                                <option value="plumbing">Air/Pipa</option>
+                                <option value="furniture">Furnitur</option>
+                                <option value="cleanliness">Kebersihan</option>
+                                <option value="security">Keamanan</option>
+                                <option value="other">Lainnya</option>
                             </select>
                             @error('category')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -74,9 +74,9 @@
                         <div class="col-md-4">
                             <label class="form-label fw-semibold">Prioritas</label>
                             <select wire:model="priority" class="form-select">
-                                <option value="low">🟢 Rendah</option>
-                                <option value="medium">🟡 Sedang</option>
-                                <option value="high">🔴 Tinggi</option>
+                                <option value="low">Rendah</option>
+                                <option value="medium">Sedang</option>
+                                <option value="high">Tinggi</option>
                             </select>
                         </div>
 
@@ -125,9 +125,9 @@
                                 'low'    => 'bg-success',
                             } }}">
                                 {{ match($complaint->priority) {
-                                    'high'   => '🔴 Tinggi',
-                                    'medium' => '🟡 Sedang',
-                                    'low'    => '🟢 Rendah',
+                                    'high'   => 'Tinggi',
+                                    'medium' => 'Sedang',
+                                    'low'    => 'Rendah',
                                 } }}
                             </span>
                             <span class="badge {{ match($complaint->category) {
@@ -139,12 +139,12 @@
                                 default       => 'bg-dark',
                             } }}">
                                 {{ match($complaint->category) {
-                                    'electrical'  => '⚡ Listrik',
-                                    'plumbing'    => '💧 Air/Pipa',
-                                    'furniture'   => '🪑 Furnitur',
-                                    'cleanliness' => '🧹 Kebersihan',
-                                    'security'    => '🔒 Keamanan',
-                                    default       => '📝 Lainnya',
+                                    'electrical'  => 'Listrik',
+                                    'plumbing'    => 'Air/Pipa',
+                                    'furniture'   => 'Furnitur',
+                                    'cleanliness' => 'Kebersihan',
+                                    'security'    => 'Keamanan',
+                                    default       => 'Lainnya',
                                 } }}
                             </span>
                         </div>
@@ -162,27 +162,30 @@
                         </small>
                     </div>
 
-                    <div class="ms-3">
-                        <span class="badge fs-6 {{ match($complaint->status) {
+                    <div class="ms-3 text-end">
+                        <span class="badge fs-6 d-block mb-2 {{ match($complaint->status) {
                             'open'        => 'bg-warning text-dark',
                             'in_progress' => 'bg-info',
                             'resolved'    => 'bg-success',
                             'closed'      => 'bg-secondary',
                         } }}">
                             {{ match($complaint->status) {
-                                'open'        => '🔴 Open',
-                                'in_progress' => '🔵 In Progress',
-                                'resolved'    => '🟢 Resolved',
-                                'closed'      => '⚫ Closed',
+                                'open'        => 'Open',
+                                'in_progress' => 'In Progress',
+                                'resolved'    => 'Resolved',
+                                'closed'      => 'Closed',
                             } }}
                         </span>
+                        <a href="{{ route('complaints.show', $complaint->id) }}" class="btn btn-primary btn-sm">
+                            <i class="fa fa-comments me-1"></i>Chat
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     @empty
         <div class="text-center py-5">
-            <div class="mb-3" style="font-size: 4rem;">😊</div>
+            <i class="fa fa-circle-check fa-3x text-muted mb-3"></i>
             <h5 class="text-muted">Belum ada komplain</h5>
             <p class="text-muted">Semoga semuanya berjalan lancar!</p>
         </div>
