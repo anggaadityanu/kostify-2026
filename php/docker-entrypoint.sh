@@ -23,8 +23,8 @@ APP_ENV=local
 APP_KEY=base64:jU6xg8sp9ia37ypFlTVk1CAFx6MmeXRukO1W987uUzI=
 APP_DEBUG=true
 APP_TIMEZONE='Asia/Jakarta'
-APP_URL=https://localhost
-ASSET_URL=https://localhost
+APP_URL=${APP_URL}
+ASSET_URL=${ASSET_URL}
 DEBUGBAR_ENABLED=false
 ASSET_PREFIX=
 # ASSET_PREFIX=/dev/kit/public example in case deployed inside a folder
@@ -87,7 +87,7 @@ MAIL_FROM_NAME="${APP_NAME}"
 # Google OAuth
 GOOGLE_CLIENT_ID=771039862248-a7ft4l8j2mdng7ivc2srgcmimntet204.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=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
-GOOGLE_REDIRECT_URI=https://localhost/auth/google/callback
+GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI}
 
 # Midtrans
 MIDTRANS_SERVER_KEY=Mid-server-TXGaDlPqiQbTWUv1eDPdRW07
@@ -117,8 +117,8 @@ APP_ENV=local
 APP_KEY=base64:jU6xg8sp9ia37ypFlTVk1CAFx6MmeXRukO1W987uUzI=
 APP_DEBUG=true
 APP_TIMEZONE='Asia/Jakarta'
-APP_URL=https://localhost
-ASSET_URL=https://localhost
+APP_URL=${APP_URL}
+ASSET_URL=${ASSET_URL}
 DEBUGBAR_ENABLED=false
 ASSET_PREFIX=
 # ASSET_PREFIX=/dev/kit/public example in case deployed inside a folder
@@ -181,7 +181,7 @@ MAIL_FROM_NAME="${APP_NAME}"
 # Google OAuth
 GOOGLE_CLIENT_ID=771039862248-a7ft4l8j2mdng7ivc2srgcmimntet204.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=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
-GOOGLE_REDIRECT_URI=https://localhost/auth/google/callback
+GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI}
 
 # Midtrans
 MIDTRANS_SERVER_KEY=Mid-server-TXGaDlPqiQbTWUv1eDPdRW07
@@ -207,7 +207,7 @@ fi
 echo "" >> /var/www/html/.env
 grep -q "GOOGLE_CLIENT_ID" /var/www/html/.env || echo "GOOGLE_CLIENT_ID=771039862248-a7ft4l8j2mdng7ivc2srgcmimntet204.apps.googleusercontent.com" >> /var/www/html/.env
 grep -q "GOOGLE_CLIENT_SECRET" /var/www/html/.env || echo "GOOGLE_CLIENT_SECRET=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" >> /var/www/html/.env
-grep -q "GOOGLE_REDIRECT_URI" /var/www/html/.env || echo "GOOGLE_REDIRECT_URI=https://localhost/auth/google/callback" >> /var/www/html/.env
+grep -q "GOOGLE_REDIRECT_URI" /var/www/html/.env || echo "GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI}" >> /var/www/html/.env
 grep -q "MIDTRANS_SERVER_KEY" /var/www/html/.env || echo "MIDTRANS_SERVER_KEY=Mid-server-TXGaDlPqiQbTWUv1eDPdRW07" >> /var/www/html/.env
 grep -q "MIDTRANS_CLIENT_KEY" /var/www/html/.env || echo "MIDTRANS_CLIENT_KEY=Mid-client-E8esgSJTTE67bWVM" >> /var/www/html/.env
 grep -q "MIDTRANS_IS_PRODUCTION" /var/www/html/.env || echo "MIDTRANS_IS_PRODUCTION=false" >> /var/www/html/.env
