@@ -9,7 +9,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            RolePermissionSeeder::class, 
+            RolePermissionSeeder::class,
             UserSeeder::class,           
             SettingSeeder::class,
             PropertySeeder::class,
@@ -17,7 +17,6 @@ class DatabaseSeeder extends Seeder
             TenantSeeder::class,
             BookingSeeder::class,
             PaymentSeeder::class,
-            ContractSeeder::class,
             ComplaintSeeder::class,
         ]);
     }

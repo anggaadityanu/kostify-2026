@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Models\Booking;
 use App\Models\Payment;
-use App\Models\Contract;
 use App\Notifications\PaymentReminderNotification;
 use App\Notifications\ContractExpiryNotification;
 use Illuminate\Console\Command;
@@ -19,7 +18,6 @@ class SendPaymentReminders extends Command
         $this->sendPaymentReminders();
         $this->markOverduePayments();
         $this->cancelExpiredBookings();
-        $this->sendContractReminders();
 
         $this->info('✅ Semua reminder berhasil dikirim!');
     }
@@ -92,23 +90,6 @@ class SendPaymentReminders extends Command
                 ->update(['status' => 'cancelled']);
 
             $this->info("🚫 Booking {$booking->booking_code} otomatis dibatalkan (telat bayar > 2 hari)");
-        }
-    }
-
-    protected function sendContractReminders(): void
-    {
-        /**
-         * Kirim notifikasi kontrak hampir habis (H-30)
-         */
-        $contracts = Contract::where('status', 'active')
-            ->whereDate('end_date', now()->addDays(30)->toDateString())
-            ->with('booking.tenant.user', 'booking.room.property')
-            ->get();
-
-        foreach ($contracts as $contract) {
-            $user = $contract->booking->tenant->user;
-            $user->notify(new ContractExpiryNotification($contract));
-            $this->info("📧 Notifikasi kontrak dikirim ke: {$user->email}");
         }
     }
 }

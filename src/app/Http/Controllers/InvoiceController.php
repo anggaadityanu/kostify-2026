@@ -18,7 +18,6 @@ class InvoiceController extends Controller
         $payment = Payment::with([
             'booking.tenant.user',
             'booking.room.property',
-            'booking.contract',
         ])->findOrFail($paymentId);
 
         // Pastikan hanya tenant pemilik yang bisa download
