@@ -13,14 +13,16 @@
     <link href="{{ asset('makaan/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('makaan/css/style.css') }}" rel="stylesheet">
 
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     @livewireStyles
 </head>
 <body>
 <div class="container-fluid bg-white p-0">
 
     <!-- Navbar -->
-    <div class="container-fluid nav-bar bg-transparent">
-        <nav class="navbar navbar-expand-lg bg-white navbar-light py-0 px-4">
+    <div class="container-fluid nav-bar bg-transparent relative z-50">
+        <nav class="navbar navbar-expand-lg bg-white navbar-light py-0 px-4 shadow-sm rounded-full mx-4 mt-4">
             <a href="{{ url('/') }}" class="navbar-brand d-flex align-items-center text-center">
                 <div class="icon p-2 me-2">
                     <img class="img-fluid" src="{{ asset('makaan/img/icon-deal.png') }}" alt="Icon" style="width: 30px; height: 30px;">
@@ -30,7 +32,7 @@
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="collapse navbar-collapse show" id="navbarCollapse">
                 <div class="navbar-nav ms-auto">
                     <a href="{{ route('dashboard') }}"
                         class="nav-item nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
@@ -80,7 +82,7 @@
     @endif
 
     <!-- Content -->
-    <div class="container py-5">
+    <div class="container py-5 relative z-10">
         {{ $slot }}
     </div>
 

@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class OverduePayments extends BaseWidget
 {
-    protected static ?int $sort = 3;
+    protected static ?int $sort = 5;
     protected int|string|array $columnSpan = 'full';
 
     public function table(Table $table): Table

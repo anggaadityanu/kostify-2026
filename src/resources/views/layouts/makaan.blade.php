@@ -27,6 +27,8 @@
     <link href="{{ asset('makaan/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('makaan/css/style.css') }}" rel="stylesheet">
 
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     @livewireStyles
     @stack('styles')
 </head>
@@ -41,8 +43,8 @@
     </div>
 
     <!-- Navbar -->
-    <div class="container-fluid nav-bar bg-transparent">
-        <nav class="navbar navbar-expand-lg bg-white navbar-light py-0 px-4">
+    <div class="container-fluid nav-bar bg-transparent relative z-50 {{ request()->routeIs('dashboard') ? 'tenant-dashboard-public-nav' : '' }}">
+        <nav class="navbar navbar-expand-lg bg-white navbar-light py-0 px-4 shadow-sm rounded-full mx-4 mt-4">
             <a href="{{ url('/') }}" class="navbar-brand d-flex align-items-center text-center">
                 <div class="icon p-2 me-2">
                     <img class="img-fluid" src="{{ asset('makaan/img/icon-deal.png') }}" alt="Icon" style="width: 30px; height: 30px;">
@@ -150,13 +152,13 @@
     @endif
 
     <!-- Content -->
-    <div class="container pt-4 pb-2">
+    <div class="container pt-4 pb-2 relative z-10 {{ request()->routeIs('dashboard') ? 'tenant-dashboard-shell' : '' }}">
         {{ $slot ?? '' }}
     </div>
     @yield('content')
 
     <!-- Footer -->
-    <div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
+    <div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5 wow fadeIn {{ request()->routeIs('dashboard') ? 'tenant-dashboard-public-footer' : '' }}" data-wow-delay="0.1s">
         <div class="container py-5">
             <div class="row g-5">
                 <div class="col-lg-3 col-md-6">

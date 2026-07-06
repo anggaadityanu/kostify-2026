@@ -26,6 +26,11 @@ class RegisteredUserController extends Controller
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'string', 'email', 'max:255', 'unique:'.User::class, new ValidEmailDomain()],
             'password' => ['required', 'confirmed', Rules\Password::min(8)->mixedCase()->numbers()],
+            'captcha'  => ['required', 'numeric', function ($attribute, $value, $fail) {
+                if ((int) $value !== session('captcha_answer')) {
+                    $fail('Jawaban verifikasi salah.');
+                }
+            }],
         ], [
             'name.required'      => 'Nama wajib diisi.',
             'email.required'     => 'Email wajib diisi.',
@@ -36,6 +41,8 @@ class RegisteredUserController extends Controller
             'password.min'       => 'Password minimal 8 karakter.',
             'password.mixed'     => 'Password harus mengandung huruf besar dan huruf kecil.',
             'password.numbers'   => 'Password harus mengandung minimal satu angka.',
+            'captcha.required'   => 'Mohon isi hasil perhitungan.',
+            'captcha.numeric'    => 'Jawaban harus berupa angka.',
         ]);
 
         $user = User::create([

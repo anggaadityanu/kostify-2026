@@ -22,8 +22,9 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
 use App\Filament\Admin\Widgets\StatsOverview;
-use App\Filament\Admin\Widgets\LatestBookings;
 use App\Filament\Admin\Widgets\OverduePayments;
+use App\Filament\Admin\Widgets\FinanceFlowChart;
+use App\Filament\Admin\Widgets\RoomStatusChart;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -33,15 +34,24 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->brandName('Kostify Admin')
+            ->brandLogo(fn () => view('filament.components.brand-logo'))
+            ->brandLogoHeight('2.5rem')
+            ->favicon(asset('makaan/img/favicon.ico'))
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->spa()
             ->login()
             ->passwordReset()
             ->profile(\App\Filament\Pages\Auth\EditProfile::class, isSimple: false)
             ->defaultThemeMode(ThemeMode::Light)
-            ->font('Montserrat')
+            ->font('Outfit')
             ->colors([
-                'primary' => Color::Blue,
+                'primary' => Color::Emerald,
+                'gray' => Color::Zinc,
+                'danger' => Color::Rose,
+                'info' => Color::Sky,
+                'success' => Color::Emerald,
+                'warning' => Color::Amber,
             ])
             ->maxContentWidth(MaxWidth::SevenExtraLarge)
             ->sidebarCollapsibleOnDesktop()
@@ -55,7 +65,8 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 \Awcodes\Overlook\Widgets\OverlookWidget::class,
                 StatsOverview::class,
-                LatestBookings::class,
+                FinanceFlowChart::class,
+                RoomStatusChart::class,
                 OverduePayments::class,
             ])
             ->navigationGroups([
@@ -87,13 +98,13 @@ class AdminPanelProvider extends PanelProvider
                         'lg' => 3,
                     ]),
                 \Hasnayeen\Themes\ThemesPlugin::make(),
-                \Njxqlus\FilamentProgressbar\FilamentProgressbarPlugin::make()->color('#29b'),
+                \Njxqlus\FilamentProgressbar\FilamentProgressbarPlugin::make()->color('#10b981'),
                 \DiogoGPinto\AuthUIEnhancer\AuthUIEnhancerPlugin::make()
                     ->showEmptyPanelOnMobile(false)
                     ->formPanelPosition('right')
                     ->formPanelWidth('40%')
                     ->emptyPanelBackgroundImageOpacity('70%')
-                    ->emptyPanelBackgroundImageUrl('https://picsum.photos/seed/picsum/1260/750.webp/?blur=1'),
+                    ->emptyPanelBackgroundImageUrl(asset('makaan/img/carousel-1.jpg')),
                 \Awcodes\LightSwitch\LightSwitchPlugin::make()
                     ->position(\Awcodes\LightSwitch\Enums\Alignment::BottomCenter)
                     ->enabledOn([

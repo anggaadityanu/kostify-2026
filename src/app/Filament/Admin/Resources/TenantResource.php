@@ -31,16 +31,15 @@ class TenantResource extends Resource
             Forms\Components\Section::make('Akun User')
                 ->schema([
                     Forms\Components\Select::make('user_id')
-                    ->label('User')
-                    ->options(function () {
-                        return User::whereHas('roles', fn ($q) =>
-                            $q->where('name', 'tenant')
-                        )
-                        ->whereDoesntHave('tenant')
-                        ->pluck('name', 'id');
-                    })
-                    ->required()
-                    ->helperText('Pilih user dengan role tenant'),
+                        ->label('User')
+                        ->options(function () {
+                            return User::whereHas('roles', fn ($q) => $q->where('name', 'tenant')
+                            )
+                                ->whereDoesntHave('tenant')
+                                ->pluck('name', 'id');
+                        })
+                        ->required()
+                        ->helperText('Pilih user dengan role tenant'),
                 ]),
 
             Forms\Components\Section::make('Data Pribadi')
@@ -62,7 +61,7 @@ class TenantResource extends Resource
                     Forms\Components\Select::make('gender')
                         ->label('Jenis Kelamin')
                         ->options([
-                            'male'   => 'Laki-laki',
+                            'male' => 'Laki-laki',
                             'female' => 'Perempuan',
                         ])
                         ->required(),
@@ -76,6 +75,24 @@ class TenantResource extends Resource
                         ->placeholder('Alamat KTP')
                         ->rows(2)
                         ->columnSpanFull(),
+
+                    Forms\Components\FileUpload::make('ktp_file')
+                        ->label('Foto KTP')
+                        ->image()
+                        ->disk('public')
+                        ->directory('tenant-documents/ktp')
+                        ->visibility('public')
+                        ->openable()
+                        ->downloadable(),
+
+                    Forms\Components\FileUpload::make('kk_file')
+                        ->label('Foto KK')
+                        ->image()
+                        ->disk('public')
+                        ->directory('tenant-documents/kk')
+                        ->visibility('public')
+                        ->openable()
+                        ->downloadable(),
                 ])->columns(2),
 
             Forms\Components\Section::make('Kontak Darurat')
@@ -128,17 +145,27 @@ class TenantResource extends Resource
                     ->label('Kelamin')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        'male'   => 'info',
+                        'male' => 'info',
                         'female' => 'success',
                     })
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'male'   => 'Laki-laki',
+                        'male' => 'Laki-laki',
                         'female' => 'Perempuan',
                     }),
 
                 Tables\Columns\TextColumn::make('occupation')
                     ->label('Pekerjaan')
                     ->searchable(),
+
+                Tables\Columns\ImageColumn::make('ktp_file')
+                    ->label('KTP')
+                    ->disk('public')
+                    ->toggleable(),
+
+                Tables\Columns\ImageColumn::make('kk_file')
+                    ->label('KK')
+                    ->disk('public')
+                    ->toggleable(),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Terdaftar')
@@ -150,7 +177,7 @@ class TenantResource extends Resource
                 Tables\Filters\SelectFilter::make('gender')
                     ->label('Jenis Kelamin')
                     ->options([
-                        'male'   => 'Laki-laki',
+                        'male' => 'Laki-laki',
                         'female' => 'Perempuan',
                     ]),
             ])
@@ -174,10 +201,10 @@ class TenantResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListTenants::route('/'),
+            'index' => Pages\ListTenants::route('/'),
             'create' => Pages\CreateTenant::route('/create'),
-            'edit'   => Pages\EditTenant::route('/{record}/edit'),
-            'view'   => Pages\ViewTenant::route('/{record}'),
+            'edit' => Pages\EditTenant::route('/{record}/edit'),
+            'view' => Pages\ViewTenant::route('/{record}'),
         ];
     }
 }
