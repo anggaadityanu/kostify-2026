@@ -27,14 +27,17 @@
 }
 
 .fi-btn-color-primary,
-.fi-ac-btn-action,
 .fi-sidebar-header .fi-icon-btn {
     color: #ffffff !important;
+    background-color: #00B98E !important;
 }
 
-.fi-btn-color-primary,
-.fi-sidebar-header .fi-icon-btn {
-    background-color: #00B98E !important;
+.fi-ac-btn-action {
+    color: #111827 !important;
+}
+
+.fi-ac-btn-action.fi-btn-color-primary {
+    color: #ffffff !important;
 }
 
 .fi-btn-color-primary:hover,
