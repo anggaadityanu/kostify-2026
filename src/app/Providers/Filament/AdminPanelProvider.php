@@ -21,7 +21,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
-use App\Filament\Pages\Auth\Login;
+use App\Filament\Admin\Pages\Auth\Login;
 use App\Filament\Admin\Widgets\StatsOverview;
 use App\Filament\Admin\Widgets\OverduePayments;
 use App\Filament\Admin\Widgets\FinanceFlowChart;
