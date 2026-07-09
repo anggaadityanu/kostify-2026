@@ -1,6 +1,6 @@
 <x-guest-layout>
     <div class="mb-8">
-        <h3 class="font-bold text-2xl text-gray-900 mb-2">Selamat Datang Kembali! 👋</h3>
+        <h3 class="font-bold text-2xl text-gray-900 mb-2">Selamat Datang Kembali!</h3>
         <p class="text-gray-500">Silakan masukkan email dan password Anda untuk masuk ke dashboard.</p>
     </div>
 

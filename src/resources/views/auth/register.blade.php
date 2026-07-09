@@ -96,7 +96,7 @@
                 <input id="terms" name="terms" type="checkbox" required class="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary">
             </div>
             <div class="ml-2 text-sm">
-                <label for="terms" class="font-medium text-gray-600">Saya setuju dengan <a href="#" class="text-primary hover:underline">Syarat & Ketentuan</a> Kostify.</label>
+                <label for="terms" class="font-medium text-gray-600">Saya setuju dengan <a href="#" class="text-primary hover:underline">Syarat & Ketentuan</a> Kostify</label>
             </div>
         </div>
 

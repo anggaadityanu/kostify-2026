@@ -54,7 +54,7 @@
                 <div class="tenant-panel-header">
                     <h3>Booking Aktif Saya</h3>
                 </div>
-                <div class="tenant-list">
+                <div class="tenant-list tenant-panel-body">
                     @foreach($pendingBookings as $booking)
                         <div class="tenant-list-item">
                             <div>

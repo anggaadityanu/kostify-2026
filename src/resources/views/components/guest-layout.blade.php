@@ -168,7 +168,7 @@
                         <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mr-3 group-hover:scale-110 transition-transform">
                             <img src="{{ asset('makaan/img/icon-deal.png') }}" style="width: 24px;" alt="Logo">
                         </div>
-                        <h2 class="m-0 text-gray-900 font-extrabold text-3xl tracking-tight">Kostify<span class="text-primary">.</span></h2>
+                        <h2 class="m-0 text-gray-900 font-extrabold text-3xl tracking-tight">Kostify</h2>
                     </a>
                 </div>
                 

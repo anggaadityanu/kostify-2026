@@ -81,7 +81,7 @@
                 <div class="flex-grow h-px bg-gradient-to-l from-transparent via-gray-300 to-gray-300"></div>
             </div>
 
-            <div id="map-section" class="rounded-3xl overflow-hidden shadow-2xl border-4 border-white relative group" style="height: 500px;">
+            <div id="map-section" class="rounded-3xl overflow-hidden shadow-2xl border-4 border-primary relative group" style="height: 500px;">
                 <div class="absolute inset-0 bg-primary/5 flex items-center justify-center z-[-1]">
                     <div class="spinner-border text-primary" role="status">
                         <span class="visually-hidden">Loading map...</span>

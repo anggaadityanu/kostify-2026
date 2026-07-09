@@ -93,7 +93,7 @@
                 @if($room->property->latitude)
                     <div class="mb-4">
                         <h5 class="fw-bold mb-3">Lokasi</h5>
-                        <div class="rounded overflow-hidden" style="height: 300px;">
+                        <div class="rounded overflow-hidden" style="height: 300px; border: 3px solid #00B98E;">
                             <iframe
                                 src="https://www.google.com/maps/embed/v1/place?key={{ config('services.google_maps.key') }}&q={{ $room->property->latitude }},{{ $room->property->longitude }}"
                                 width="100%" height="300" style="border:0;" allowfullscreen loading="lazy">

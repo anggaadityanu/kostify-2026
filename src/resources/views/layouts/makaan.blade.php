@@ -76,7 +76,7 @@
                         </a>
                         <a href="{{ route('login') }}" class="nav-item nav-link">Masuk</a>
                         <a href="{{ route('register') }}"
-                            class="btn btn-primary px-4 d-none d-lg-flex align-items-center justify-content-center ms-2">
+                            class="btn btn-primary px-4 rounded-pill d-none d-lg-flex align-items-center justify-content-center ms-2">
                             Daftar Gratis
                         </a>
                     @else
