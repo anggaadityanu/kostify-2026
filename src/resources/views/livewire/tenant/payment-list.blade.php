@@ -1,3 +1,5 @@
+@section("page-title", "Pembayaran")
+
 <div>
     {{-- Header --}}
     <div class="mb-4">

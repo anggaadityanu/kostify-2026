@@ -1,4 +1,6 @@
-<x-tenant-layout>
+@extends('layouts.tenant-portal')
+@section('page-title', 'Pengaturan')
+@section('content')
     <div class="row justify-content-center">
         <div class="col-md-8">
             <h2 class="mb-4 fw-bold text-dark">Edit Profil </h2>
@@ -106,4 +108,4 @@
 
         </div>
     </div>
-</x-tenant-layout>
+@endsection

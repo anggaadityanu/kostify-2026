@@ -1,3 +1,5 @@
+@section("page-title", "Cari Kamar")
+
 <div>
     <!-- Search Header -->
     <div class="container-fluid bg-primary mb-5 py-4" style="border-radius: 0 0 2rem 2rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);">

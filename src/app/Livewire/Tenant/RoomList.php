@@ -68,9 +68,11 @@ class RoomList extends Component
             ->distinct()
             ->pluck('city');
 
+        $isTenant = auth()->check() && !auth()->user()->hasRole(['super_admin', 'owner']);
+
         return view('livewire.tenant.room-list', [
             'rooms'  => $rooms,
             'cities' => $cities,
-        ])->layout('layouts.makaan');
+        ])->layout($isTenant ? 'layouts.tenant-portal' : 'layouts.makaan');
     }
 }

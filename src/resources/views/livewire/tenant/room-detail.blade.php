@@ -1,3 +1,5 @@
+@section("page-title", "Detail Kamar")
+
 <div>
     {{-- Breadcrumb --}}
     <div class="container-fluid bg-light py-3">

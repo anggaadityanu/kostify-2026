@@ -65,6 +65,19 @@ class Dashboard extends Component
             ->get();
         }
 
+        // Tagihan bulan berjalan = tagihan belum bayar dengan jatuh tempo paling dekat
+        $currentPayment = $unpaidPayments->first();
+
+        // Pembayaran terakhir yang lunas, buat status "Lancar / Terlambat"
+        $lastPaidPayment = $recentPayments->first();
+
+        // Gabungan 5 transaksi terbaru (lunas + belum) buat tabel "Pembayaran Terbaru"
+        $latestPayments = $recentPayments
+            ->concat($unpaidPayments)
+            ->sortByDesc(fn ($p) => $p->due_date)
+            ->take(5)
+            ->values();
+
         return view('livewire.tenant.dashboard', [
             'tenant'          => $tenant,
             'activeBooking'   => $activeBooking,
@@ -72,6 +85,9 @@ class Dashboard extends Component
             'unpaidPayments'  => $unpaidPayments,
             'openComplaints'  => $openComplaints,
             'recentPayments'  => $recentPayments,
-        ])->layout('layouts.makaan');
+            'currentPayment'  => $currentPayment,
+            'lastPaidPayment' => $lastPaidPayment,
+            'latestPayments'  => $latestPayments,
+        ])->layout('layouts.tenant-portal');
     }
 }

@@ -40,10 +40,12 @@ class RoomDetail extends Component
             );
         }
 
+        $isTenant = auth()->check() && !auth()->user()->hasRole(['super_admin', 'owner']);
+
         return view('livewire.tenant.room-detail', [
             'room'          => $this->room,
             'embedUrl'      => $embedUrl,
             'directionsUrl' => $directionsUrl,
-        ])->layout('layouts.makaan');
+        ])->layout($isTenant ? 'layouts.tenant-portal' : 'layouts.makaan');
     }
 }

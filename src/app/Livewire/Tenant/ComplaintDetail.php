@@ -23,6 +23,6 @@ class ComplaintDetail extends Component
     public function render()
     {
         return view('livewire.tenant.complaint-detail')
-            ->layout('layouts.makaan');
+            ->layout('layouts.tenant-portal');
     }
 }

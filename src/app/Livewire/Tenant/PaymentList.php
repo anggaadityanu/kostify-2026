@@ -63,6 +63,6 @@ class PaymentList extends Component
 
         return view('livewire.tenant.payment-list', [
             'payments' => $payments,
-        ])->layout('layouts.makaan');
+        ])->layout('layouts.tenant-portal');
     }
 }

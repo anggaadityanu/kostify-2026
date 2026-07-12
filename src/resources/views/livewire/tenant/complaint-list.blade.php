@@ -1,3 +1,5 @@
+@section("page-title", "Pengajuan Keluhan")
+
 <div>
     {{-- Header --}}
     <div class="d-flex justify-content-between align-items-center mb-4">

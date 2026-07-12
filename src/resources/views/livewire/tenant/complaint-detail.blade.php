@@ -1,3 +1,5 @@
+@section("page-title", "Detail Keluhan")
+
 <div>
     <div class="mb-4">
         <a href="{{ route('complaints.index') }}" class="text-muted small">

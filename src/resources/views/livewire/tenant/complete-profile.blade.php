@@ -1,3 +1,5 @@
+@section("page-title", "Profil Saya")
+
 <div class="container py-5" style="max-width: 700px;">
     <h2 class="fw-bold mb-2">Lengkapi Profil</h2>
     <p class="text-muted mb-4">Data ini diperlukan untuk proses booking kamar.</p>

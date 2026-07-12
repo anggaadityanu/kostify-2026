@@ -69,6 +69,6 @@ class ComplaintList extends Component
         return view('livewire.tenant.complaint-list', [
             'complaints' => $complaints,
             'rooms'      => $rooms,
-        ])->layout('layouts.makaan');
+        ])->layout('layouts.tenant-portal');
     }
 }

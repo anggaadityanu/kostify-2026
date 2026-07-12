@@ -1,5 +1,9 @@
-@extends('layouts.makaan')
+@php
+    $isTenant = auth()->check() && !auth()->user()->hasRole(['super_admin', 'owner']);
+@endphp
+@extends($isTenant ? 'layouts.tenant-portal' : 'layouts.makaan')
 @section('title', 'Tentang Kami - Kostify')
+@section('page-title', 'Tentang Kami')
 @section('content')
 
 @php($settings = \App\Models\Setting::current())

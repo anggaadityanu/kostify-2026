@@ -109,6 +109,6 @@ class CompleteProfile extends Component
     public function render()
     {
         return view('livewire.tenant.complete-profile')
-            ->layout('layouts.makaan');
+            ->layout('layouts.tenant-portal');
     }
 }
