@@ -33,7 +33,9 @@ class BookingForm extends Component
         }
 
         // Redirect kalau profil belum lengkap
-         if (!Auth::user()->tenant) {
+        // Simpan dulu tujuan booking-nya di session, biar setelah
+        // CompleteProfile disimpan, tenant bisa dibalikin ke sini lagi
+        if (!Auth::user()->tenant) {
             session()->put('redirect_after_profile', route('booking.form', $roomId));
             session()->flash('warning', 'Lengkapi profil dulu sebelum booking!');
             $this->redirect(route('profile.complete'));
@@ -107,6 +109,6 @@ class BookingForm extends Component
     {
         return view('livewire.tenant.booking-form', [
             'room' => $this->room,
-        ])->layout('layouts.makaan');
+        ])->layout('layouts.tenant-portal');
     }
 }

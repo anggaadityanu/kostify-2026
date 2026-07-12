@@ -76,6 +76,6 @@ class RenewalForm extends Component
 
     public function render()
     {
-        return view('livewire.tenant.renewal-form')->layout('layouts.makaan');
+        return view('livewire.tenant.renewal-form')->layout('layouts.tenant-portal');
     }
 }

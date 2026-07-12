@@ -1,3 +1,5 @@
+@section("page-title", "Form Booking")
+
 <div>
     <div class="container py-5" style="max-width: 700px;">
         <h2 class="fw-bold mb-4">Form Booking </h2>
