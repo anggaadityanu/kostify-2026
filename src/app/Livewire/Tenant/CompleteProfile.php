@@ -103,7 +103,11 @@ class CompleteProfile extends Component
         );
 
         session()->flash('success', 'Profil berhasil dilengkapi!');
-        $this->redirect(route('dashboard'));
+
+        // Kalau tadi user datang ke sini gara-gara mau booking kamar,
+        // balikin dia ke halaman booking itu, bukan ke dashboard
+        $redirectTo = session()->pull('redirect_after_profile', route('dashboard'));
+        $this->redirect($redirectTo);
     }
 
     public function render()

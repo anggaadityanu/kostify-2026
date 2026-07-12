@@ -33,9 +33,11 @@ class BookingForm extends Component
         }
 
         // Redirect kalau profil belum lengkap
-        if (!Auth::user()->tenant) {
+         if (!Auth::user()->tenant) {
+            session()->put('redirect_after_profile', route('booking.form', $roomId));
             session()->flash('warning', 'Lengkapi profil dulu sebelum booking!');
             $this->redirect(route('profile.complete'));
+            return;
         }
 
         // Default check in = hari ini
