@@ -18,7 +18,19 @@ class PaymentReminderNotification extends Notification
 
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['mail', 'database'];
+    }
+
+    public function toDatabase(object $notifiable): array
+    {
+        return [
+            'title'   => $this->daysRemaining <= 1 ? 'Tagihan Jatuh Tempo Hari Ini!' : "Tagihan Jatuh Tempo {$this->daysRemaining} Hari Lagi",
+            'message' => 'Invoice ' . $this->payment->invoice_number . ' sebesar Rp '
+                . number_format($this->payment->total_amount, 0, ',', '.') . ' jatuh tempo '
+                . $this->payment->due_date->format('d M Y'),
+            'url'  => route('payments.index'),
+            'icon' => 'heroicon-o-clock',
+        ];
     }
 
     /**

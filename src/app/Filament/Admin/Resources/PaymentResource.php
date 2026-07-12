@@ -222,6 +222,10 @@ class PaymentResource extends Resource
                             $booking->room->update(['status' => 'occupied']);
                         }
 
+                        $booking?->tenant->user->notify(
+                            new \App\Notifications\PaymentConfirmedNotification($record)
+                        );
+
                         Notification::make()
                             ->title('Pembayaran dikonfirmasi & booking diaktifkan!')
                             ->success()

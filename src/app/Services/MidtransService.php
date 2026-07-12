@@ -139,5 +139,15 @@ class MidtransService
             $booking->update(['status' => 'active']);
             $booking->room->update(['status' => 'occupied']);
         }
+
+        $booking->tenant->user->notify(new \App\Notifications\PaymentConfirmedNotification($payment));
+
+        \App\Models\User::role('super_admin')->get()
+            ->each(fn ($u) => $u->notify(new \App\Notifications\PaymentReceivedNotification($payment)));
+
+        $owner = $booking->room->property->user;
+        if ($owner) {
+            $owner->notify(new \App\Notifications\PaymentReceivedNotification($payment));
+        }
     }
 }

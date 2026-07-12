@@ -55,6 +55,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/booking/{roomId}', \App\Livewire\Tenant\BookingForm::class)
         ->name('booking.form');
 
+    // Perpanjangan sewa - bisa kapan pun selama booking masih aktif
+    Route::get('/dashboard/booking/{booking}/renew', \App\Livewire\Tenant\RenewalForm::class)
+        ->name('renewal.form');
+
     // Pembayaran
     Route::get('/dashboard/payments', \App\Livewire\Tenant\PaymentList::class)
         ->name('payments.index');

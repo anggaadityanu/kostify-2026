@@ -26,7 +26,10 @@
                     <p class="tenant-card-label">Status Sewa</p>
                     <h2 class="tenant-card-value {{ $activeBooking ? 'text-success' : 'text-gray-700' }}">{{ $activeBooking ? 'Aktif' : 'Tidak Ada' }}</h2>
                     @if($activeBooking)
-                        <p class="text-gray-500 mb-0">{{ $activeBooking->room->property->name }} &bull; Kamar {{ $activeBooking->room->room_number }}</p>
+                        <p class="text-gray-500 mb-2">{{ $activeBooking->room->property->name }} &bull; Kamar {{ $activeBooking->room->room_number }}</p>
+                        <a href="{{ route('renewal.form', $activeBooking->id) }}" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                            <i class="fa fa-redo me-1"></i> Perpanjang Sewa
+                        </a>
                     @endif
                 </div>
             </div>

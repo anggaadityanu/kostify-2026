@@ -17,7 +17,18 @@ class BookingApprovedNotification extends Notification
 
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['mail', 'database'];
+    }
+
+    public function toDatabase(object $notifiable): array
+    {
+        return [
+            'title'   => 'Booking Disetujui',
+            'message' => 'Booking ' . $this->booking->booking_code . ' untuk kamar '
+                . $this->booking->room->room_number . ' disetujui. Segera bayar tagihan sebelum jatuh tempo.',
+            'url'  => route('payments.index'),
+            'icon' => 'heroicon-o-check-badge',
+        ];
     }
 
     /**

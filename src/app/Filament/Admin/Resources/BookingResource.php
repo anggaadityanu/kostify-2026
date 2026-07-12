@@ -200,7 +200,7 @@ class BookingResource extends Resource
                     ->color('success')
                     ->visible(fn (Booking $record) => $record->status === 'pending')
                     ->requiresConfirmation()
-                    ->modalDescription('Setelah disetujui, tagihan pembayaran akan dibuat otomatis dengan jatuh tempo 2 hari dari sekarang.')
+                    ->modalDescription('Setelah disetujui, tagihan pembayaran akan dibuat otomatis sebesar total harga (harga kamar x durasi sewa), jatuh tempo 2 hari dari sekarang.')
                     ->action(function (Booking $record) {
                         $record->refresh();
                         if ($record->status !== 'pending') {
@@ -209,14 +209,7 @@ class BookingResource extends Resource
 
                         $record->update(['status' => 'approved']);
 
-                        Payment::create([
-                            'booking_id'   => $record->id,
-                            'amount'       => $record->room->price_monthly,
-                            'fine_amount'  => 0,
-                            'total_amount' => $record->room->price_monthly,
-                            'due_date'     => now()->addDays(2),
-                            'status'       => 'unpaid',
-                        ]);
+                        app(\App\Services\BillingService::class)->generateInitialInvoices($record);
 
                         $record->tenant->user->notify(
                             new BookingApprovedNotification($record)
@@ -224,7 +217,7 @@ class BookingResource extends Resource
 
                         Notification::make()
                             ->title('Booking disetujui, tagihan dibuat & notifikasi terkirim!')
-                            ->body('Tenant punya waktu 2 hari untuk membayar sebelum booking otomatis dibatalkan.')
+                            ->body('Tagihan sebesar Rp ' . number_format($record->total_price, 0, ',', '.') . " untuk {$record->duration_months} bulan sudah dibuat. Tenant punya waktu 2 hari untuk membayar sebelum booking otomatis dibatalkan.")
                             ->success()
                             ->send();
                     }),

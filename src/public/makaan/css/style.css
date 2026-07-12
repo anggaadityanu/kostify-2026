@@ -69,17 +69,19 @@
 
 /*** Navbar ***/
 .nav-bar {
-    position: relative;
+    position: sticky !important;
+    top: 0 !important;
     margin-top: 0;
     padding: 0;
-    transition: .5s;
-    z-index: 9999;
+    transition: box-shadow .3s ease;
+    z-index: 9999 !important;
 }
 
 .nav-bar.sticky-top {
-    position: sticky;
+    position: sticky !important;
+    top: 0 !important;
     padding: 0;
-    z-index: 9999;
+    z-index: 9999 !important;
 }
 
 .navbar {

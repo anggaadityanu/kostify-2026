@@ -14,6 +14,8 @@ class Payment extends Model
     protected $fillable = [
         'invoice_number',
         'booking_id',
+        'period_month',
+        'is_renewal',
         'amount',
         'fine_amount',
         'total_amount',

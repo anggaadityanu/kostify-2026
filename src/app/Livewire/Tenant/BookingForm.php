@@ -78,7 +78,7 @@ class BookingForm extends Component
         $tenant = Auth::user()->tenant;
 
         // Buat booking (status pending, kamar otomatis ditandai 'booked')
-        Booking::create([
+        $booking = Booking::create([
             'room_id'         => $this->room->id,
             'tenant_id'       => $tenant->id,
             'check_in_date'   => $this->checkInDate,
@@ -87,6 +87,15 @@ class BookingForm extends Component
             'status'          => 'pending',
             'notes'           => $this->notes,
         ]);
+
+        // Notifikasi ke admin & pemilik properti
+        \App\Models\User::role('super_admin')->get()
+            ->each(fn ($u) => $u->notify(new \App\Notifications\NewBookingNotification($booking)));
+
+        $owner = $this->room->property->user;
+        if ($owner) {
+            $owner->notify(new \App\Notifications\NewBookingNotification($booking));
+        }
 
         session()->flash('success', 'Booking berhasil dibuat! Mohon tunggu, admin akan memverifikasi booking kamu. Tagihan akan muncul setelah disetujui.');
         $this->redirect(route('dashboard'));
