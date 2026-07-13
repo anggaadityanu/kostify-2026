@@ -200,12 +200,14 @@ class PaymentResource extends Resource
                     ]),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
+
                 // Konfirmasi pembayaran manual
                 Tables\Actions\Action::make('confirm')
                     ->label('Konfirmasi Lunas')
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
-                    ->visible(fn (Payment $record) => in_array($record->status, ['pending', 'unpaid', 'overdue']))
+                    ->visible(fn (Payment $record) => ! Auth::user()->isOwner() && in_array($record->status, ['pending', 'unpaid', 'overdue']))
                     ->requiresConfirmation()
                     ->modalDescription('Pastikan uang sudah benar-benar masuk ke rekening/akun sebelum konfirmasi.')
                     ->action(function (Payment $record) {
@@ -237,7 +239,7 @@ class PaymentResource extends Resource
                     ->label('Tandai Menunggak')
                     ->icon('heroicon-o-exclamation-circle')
                     ->color('danger')
-                    ->visible(fn (Payment $record) => $record->status === 'unpaid' && $record->due_date->isPast())
+                    ->visible(fn (Payment $record) => ! Auth::user()->isOwner() && $record->status === 'unpaid' && $record->due_date->isPast())
                     ->action(function (Payment $record) {
                         $fine = $record->calculateFine();
                         $record->update([

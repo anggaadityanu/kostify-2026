@@ -194,11 +194,13 @@ class BookingResource extends Resource
                     ]),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
+
                 Tables\Actions\Action::make('approve')
                     ->label('Approve')
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
-                    ->visible(fn (Booking $record) => $record->status === 'pending')
+                    ->visible(fn (Booking $record) => ! Auth::user()->isOwner() && $record->status === 'pending')
                     ->requiresConfirmation()
                     ->modalDescription('Setelah disetujui, tagihan pembayaran akan dibuat otomatis sebesar total harga (harga kamar x durasi sewa), jatuh tempo 2 hari dari sekarang.')
                     ->action(function (Booking $record) {
@@ -226,7 +228,7 @@ class BookingResource extends Resource
                     ->label('Batalkan')
                     ->icon('heroicon-o-x-circle')
                     ->color('danger')
-                    ->visible(fn (Booking $record) => in_array($record->status, ['pending', 'approved']))
+                    ->visible(fn (Booking $record) => ! Auth::user()->isOwner() && in_array($record->status, ['pending', 'approved']))
                     ->requiresConfirmation()
                     ->action(function (Booking $record) {
                         $record->update(['status' => 'cancelled']);

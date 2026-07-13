@@ -31,6 +31,11 @@ class RoomPolicy
      */
     public function create(User $user): bool
     {
+        // Owner cuma boleh review & monitoring, gak boleh nambah data
+        if ($user->isOwner()) {
+            return false;
+        }
+
         return $user->can('create_room');
     }
 
@@ -39,6 +44,11 @@ class RoomPolicy
      */
     public function update(User $user, Room $room): bool
     {
+        // Owner cuma boleh review & monitoring, gak boleh edit data
+        if ($user->isOwner()) {
+            return false;
+        }
+
         return $user->can('update_room');
     }
 
@@ -47,6 +57,11 @@ class RoomPolicy
      */
     public function delete(User $user, Room $room): bool
     {
+        // Owner cuma boleh review & monitoring, gak boleh hapus data
+        if ($user->isOwner()) {
+            return false;
+        }
+
         return $user->can('delete_room');
     }
 
@@ -55,6 +70,11 @@ class RoomPolicy
      */
     public function deleteAny(User $user): bool
     {
+        // Owner cuma boleh review & monitoring, gak boleh hapus data
+        if ($user->isOwner()) {
+            return false;
+        }
+
         return $user->can('delete_any_room');
     }
 

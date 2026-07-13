@@ -9,6 +9,7 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Illuminate\Support\Facades\Auth;
 
 class ManageSettings extends Page implements HasForms
 {
@@ -23,6 +24,16 @@ class ManageSettings extends Page implements HasForms
     protected static string $view = 'filament.pages.manage-settings';
 
     public ?array $data = [];
+
+    /**
+     * Halaman ini cuma buat Super Admin. Owner cuma review & monitoring,
+     * jadi menu "Pengaturan Website" gak ditampilkan & gak bisa diakses
+     * langsung lewat URL sekalipun.
+     */
+    public static function canAccess(): bool
+    {
+        return Auth::check() && Auth::user()->isSuperAdmin();
+    }
 
     public function mount(): void
     {

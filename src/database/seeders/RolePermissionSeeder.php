@@ -23,17 +23,20 @@ class RolePermissionSeeder extends Seeder
         $superAdmin = Role::firstOrCreate(['name' => 'super_admin']);
         $superAdmin->givePermissionTo(Permission::all());
 
-        // Owner -> permission terbatas, nama HARUS sama persis kayak yang
-        // dicek di app/Policies/*.php (format Filament Shield: view_any_x,
-        // view_x, create_x, update_x, delete_x, delete_any_x)
+        // Owner -> murni review & monitoring (view-only), nama HARUS sama
+        // persis kayak yang dicek di app/Policies/*.php (format Filament
+        // Shield: view_any_x, view_x). Sengaja TIDAK ada create/update/delete.
+        // Pakai syncPermissions() (bukan givePermissionTo()) supaya kalau
+        // sebelumnya role owner ini pernah dikasih permission lain (misal
+        // create/update/delete), permission lama itu ikut ke-reset/hilang.
         $owner = Role::firstOrCreate(['name' => 'owner']);
-        $owner->givePermissionTo(array_filter([
-            'view_any_property', 'view_property', 'update_property',
-            'view_any_room', 'view_room', 'update_room',
+        $owner->syncPermissions(array_filter([
+            'view_any_property', 'view_property',
+            'view_any_room', 'view_room',
             'view_any_tenant', 'view_tenant',
-            'view_any_booking', 'view_booking', 'update_booking',
-            'view_any_payment', 'view_payment', 'update_payment',
-            'view_any_complaint', 'view_complaint', 'update_complaint',
+            'view_any_booking', 'view_booking',
+            'view_any_payment', 'view_payment',
+            'view_any_complaint', 'view_complaint',
         ], fn ($name) => Permission::where('name', $name)->exists()));
 
         // Tenant -> gak akses admin panel sama sekali, tapi tetep

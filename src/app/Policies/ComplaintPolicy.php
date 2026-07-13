@@ -31,6 +31,11 @@ class ComplaintPolicy
      */
     public function create(User $user): bool
     {
+        // Owner cuma boleh review & monitoring, gak boleh nambah data
+        if ($user->isOwner()) {
+            return false;
+        }
+
         return $user->can('create_complaint');
     }
 
@@ -39,6 +44,11 @@ class ComplaintPolicy
      */
     public function update(User $user, Complaint $complaint): bool
     {
+        // Owner cuma boleh review & monitoring, gak boleh edit data
+        if ($user->isOwner()) {
+            return false;
+        }
+
         return $user->can('update_complaint');
     }
 
@@ -47,6 +57,11 @@ class ComplaintPolicy
      */
     public function delete(User $user, Complaint $complaint): bool
     {
+        // Owner cuma boleh review & monitoring, gak boleh hapus data
+        if ($user->isOwner()) {
+            return false;
+        }
+
         return $user->can('delete_complaint');
     }
 
@@ -55,6 +70,11 @@ class ComplaintPolicy
      */
     public function deleteAny(User $user): bool
     {
+        // Owner cuma boleh review & monitoring, gak boleh hapus data
+        if ($user->isOwner()) {
+            return false;
+        }
+
         return $user->can('delete_any_complaint');
     }
 

@@ -194,7 +194,7 @@ class ComplaintResource extends Resource
                     ->label('Proses')
                     ->icon('heroicon-o-wrench')
                     ->color('warning')
-                    ->visible(fn (Complaint $record) => $record->status === 'open')
+                    ->visible(fn (Complaint $record) => ! Auth::user()->isOwner() && $record->status === 'open')
                     ->action(function (Complaint $record) {
                         $record->update(['status' => 'in_progress']);
                         Notification::make()
@@ -207,7 +207,7 @@ class ComplaintResource extends Resource
                     ->label('Selesai')
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
-                    ->visible(fn (Complaint $record) => $record->status === 'in_progress')
+                    ->visible(fn (Complaint $record) => ! Auth::user()->isOwner() && $record->status === 'in_progress')
                     ->requiresConfirmation()
                     ->action(function (Complaint $record) {
                         $record->update(['status' => 'resolved']);
@@ -221,6 +221,7 @@ class ComplaintResource extends Resource
                     ->label('Chat')
                     ->icon('heroicon-o-chat-bubble-left-right')
                     ->color('info')
+                    ->visible(fn () => ! Auth::user()->isOwner())
                     ->url(fn (Complaint $record) => ComplaintResource::getUrl('chat', ['record' => $record])),
 
                 Tables\Actions\ViewAction::make(),

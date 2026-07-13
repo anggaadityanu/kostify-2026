@@ -31,6 +31,11 @@ class PaymentPolicy
      */
     public function create(User $user): bool
     {
+        // Owner cuma boleh review & monitoring, gak boleh nambah data
+        if ($user->isOwner()) {
+            return false;
+        }
+
         return $user->can('create_payment');
     }
 
@@ -39,6 +44,11 @@ class PaymentPolicy
      */
     public function update(User $user, Payment $payment): bool
     {
+        // Owner cuma boleh review & monitoring, gak boleh edit data
+        if ($user->isOwner()) {
+            return false;
+        }
+
         return $user->can('update_payment');
     }
 
@@ -47,6 +57,11 @@ class PaymentPolicy
      */
     public function delete(User $user, Payment $payment): bool
     {
+        // Owner cuma boleh review & monitoring, gak boleh hapus data
+        if ($user->isOwner()) {
+            return false;
+        }
+
         return $user->can('delete_payment');
     }
 
@@ -55,6 +70,11 @@ class PaymentPolicy
      */
     public function deleteAny(User $user): bool
     {
+        // Owner cuma boleh review & monitoring, gak boleh hapus data
+        if ($user->isOwner()) {
+            return false;
+        }
+
         return $user->can('delete_any_payment');
     }
 

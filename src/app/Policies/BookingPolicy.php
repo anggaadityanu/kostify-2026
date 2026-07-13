@@ -31,6 +31,11 @@ class BookingPolicy
      */
     public function create(User $user): bool
     {
+        // Owner cuma boleh review & monitoring, gak boleh nambah data
+        if ($user->isOwner()) {
+            return false;
+        }
+
         return $user->can('create_booking');
     }
 
@@ -39,6 +44,11 @@ class BookingPolicy
      */
     public function update(User $user, Booking $booking): bool
     {
+        // Owner cuma boleh review & monitoring, gak boleh edit data
+        if ($user->isOwner()) {
+            return false;
+        }
+
         return $user->can('update_booking');
     }
 
@@ -47,6 +57,11 @@ class BookingPolicy
      */
     public function delete(User $user, Booking $booking): bool
     {
+        // Owner cuma boleh review & monitoring, gak boleh hapus data
+        if ($user->isOwner()) {
+            return false;
+        }
+
         return $user->can('delete_booking');
     }
 
@@ -55,6 +70,11 @@ class BookingPolicy
      */
     public function deleteAny(User $user): bool
     {
+        // Owner cuma boleh review & monitoring, gak boleh hapus data
+        if ($user->isOwner()) {
+            return false;
+        }
+
         return $user->can('delete_any_booking');
     }
 

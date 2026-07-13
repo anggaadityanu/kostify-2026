@@ -31,6 +31,11 @@ class PropertyPolicy
      */
     public function create(User $user): bool
     {
+        // Owner cuma boleh review & monitoring, gak boleh nambah data
+        if ($user->isOwner()) {
+            return false;
+        }
+
         return $user->can('create_property');
     }
 
@@ -39,6 +44,11 @@ class PropertyPolicy
      */
     public function update(User $user, Property $property): bool
     {
+        // Owner cuma boleh review & monitoring, gak boleh edit data
+        if ($user->isOwner()) {
+            return false;
+        }
+
         return $user->can('update_property');
     }
 
@@ -47,6 +57,11 @@ class PropertyPolicy
      */
     public function delete(User $user, Property $property): bool
     {
+        // Owner cuma boleh review & monitoring, gak boleh hapus data
+        if ($user->isOwner()) {
+            return false;
+        }
+
         return $user->can('delete_property');
     }
 
@@ -55,6 +70,11 @@ class PropertyPolicy
      */
     public function deleteAny(User $user): bool
     {
+        // Owner cuma boleh review & monitoring, gak boleh hapus data
+        if ($user->isOwner()) {
+            return false;
+        }
+
         return $user->can('delete_any_property');
     }
 

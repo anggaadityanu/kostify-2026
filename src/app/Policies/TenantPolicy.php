@@ -31,6 +31,11 @@ class TenantPolicy
      */
     public function create(User $user): bool
     {
+        // Owner cuma boleh review & monitoring, gak boleh nambah data
+        if ($user->isOwner()) {
+            return false;
+        }
+
         return $user->can('create_tenant');
     }
 
@@ -39,6 +44,11 @@ class TenantPolicy
      */
     public function update(User $user, Tenant $tenant): bool
     {
+        // Owner cuma boleh review & monitoring, gak boleh edit data
+        if ($user->isOwner()) {
+            return false;
+        }
+
         return $user->can('update_tenant');
     }
 
@@ -47,6 +57,11 @@ class TenantPolicy
      */
     public function delete(User $user, Tenant $tenant): bool
     {
+        // Owner cuma boleh review & monitoring, gak boleh hapus data
+        if ($user->isOwner()) {
+            return false;
+        }
+
         return $user->can('delete_tenant');
     }
 
@@ -55,6 +70,11 @@ class TenantPolicy
      */
     public function deleteAny(User $user): bool
     {
+        // Owner cuma boleh review & monitoring, gak boleh hapus data
+        if ($user->isOwner()) {
+            return false;
+        }
+
         return $user->can('delete_any_tenant');
     }
 

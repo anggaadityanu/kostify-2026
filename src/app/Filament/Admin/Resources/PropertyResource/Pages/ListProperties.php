@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources\PropertyResource\Pages;
 
 use App\Filament\Admin\Resources\PropertyResource;
 use Filament\Actions;
+use Illuminate\Support\Facades\Auth;
 use Filament\Resources\Pages\ListRecords;
 
 class ListProperties extends ListRecords
@@ -13,7 +14,8 @@ class ListProperties extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+                ->visible(fn () => ! Auth::user()->isOwner()),
         ];
     }
 }
