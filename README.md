@@ -11,11 +11,11 @@
 ## Informasi Proyek UAS
 
 - Proyek UAS: Pengelolaan dan Pemesanan Kos & Kontrakan Berbasis Web
-- Nama: [Isi nama Anda]
-- NIM: [Isi NIM Anda]
+- Nama: [Angga Aditya]
+- NIM: [20240801165]
 - Mata Kuliah: Pemrograman Web
-- Dosen Pengampu: [Isi nama dosen]
-- Program Studi: [Isi prodi Anda]
+- Dosen Pengampu: [EFRY SUNUPURWA ASRI , S.Kom., M.Kom.]
+- Program Studi: [Teknik Informatika]
 
 [![Laravel](https://img.shields.io/badge/Laravel-12.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
 [![PHP](https://img.shields.io/badge/PHP-8.2-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://www.php.net)
@@ -26,16 +26,6 @@
 Kostify adalah aplikasi web manajemen kos modern yang membantu pemilik properti dan penyewa dalam mengelola proses sewa secara lebih terorganisir. Aplikasi ini menggabungkan sisi publik untuk pencarian kamar, sisi tenant untuk proses booking dan pembayaran, serta sisi admin/owner untuk pengelolaan operasional kos.
 
 Project ini dibangun dengan Laravel, Livewire, Filament, Tailwind CSS, MariaDB, dan Docker, sehingga cocok untuk kebutuhan sistem kos yang scalable dan siap dikembangkan lebih lanjut.
-
-## Preview UI
-
-Berikut beberapa tampilan visual yang sudah tersedia di project ini sebagai referensi preview:
-
-- Landing page / halaman utama: [src/public/makaan/img/header.jpg](src/public/makaan/img/header.jpg)
-- Daftar kamar / properti: [src/public/makaan/img/property-1.jpg](src/public/makaan/img/property-1.jpg)
-- Tampilan properti lain: [src/public/makaan/img/property-2.jpg](src/public/makaan/img/property-2.jpg)
-
-> Jika ingin, screenshot asli dari fitur utama bisa ditambahkan nanti untuk membuat README terlihat lebih menarik di GitHub.
 
 ## Fitur Utama
 
