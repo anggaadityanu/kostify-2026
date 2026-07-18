@@ -14,7 +14,7 @@
 - Nama: [Angga Aditya]
 - NIM: [20240801165]
 - Mata Kuliah: Pemrograman Web
-- Dosen Pengampu: [EFRY SUNUPURWA ASRI , S.Kom., M.Kom.]
+- Dosen Pengampu: [JEFRY SUNUPURWA ASRI , S.Kom., M.Kom.]
 - Program Studi: [Teknik Informatika]
 
 [![Laravel](https://img.shields.io/badge/Laravel-12.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
